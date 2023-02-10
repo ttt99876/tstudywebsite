@@ -1,18 +1,19 @@
 ---
-import { getLanguageFromURL, KNOWN_LANGUAGE_CODES } from '../../languages';
-import { SITE } from '../../consts';
-import AstroLogo from './AstroLogo.astro';
-import SkipToContent from './SkipToContent.astro';
-import SidebarToggle from './SidebarToggle';
-import LanguageSelect from './LanguageSelect';
-import Search from './Search';
+	import ThemeToggleButton from "../RightSidebar/ThemeToggleButton"
+	import { getLanguageFromURL, KNOWN_LANGUAGE_CODES } from '../../languages';
+	import { SITE } from '../../consts';
+	import AstroLogo from './AstroLogo.astro';
+	import SkipToContent from './SkipToContent.astro';
+	import SidebarToggle from './SidebarToggle';
+	import LanguageSelect from './LanguageSelect';
+	import Search from './Search';
 
-type Props = {
-	currentPage: string;
-};
+	type Props = {
+		currentPage: string;
+	};
 
-const { currentPage } = Astro.props;
-const lang = getLanguageFromURL(currentPage);
+	const { currentPage } = Astro.props;
+	const lang = getLanguageFromURL(currentPage);
 ---
 
 <header>
@@ -28,8 +29,12 @@ const lang = getLanguageFromURL(currentPage);
 			</a>
 		</div>
 		<div style="flex-grow: 1;"></div>
-		{KNOWN_LANGUAGE_CODES.length > 1 && <LanguageSelect lang={lang} client:idle />}
+		{KNOWN_LANGUAGE_CODES.length > 1 &&
+		<LanguageSelect lang={lang} client:idle />}
 		<div class="search-item">
+			<div style="margin-right:2rem">
+				<ThemeToggleButton client:visible />
+			</div>
 			<Search client:idle />
 		</div>
 	</nav>
@@ -143,7 +148,7 @@ const lang = getLanguageFromURL(currentPage);
 </style>
 
 <style is:global>
-	.search-item > * {
+	.search-item>* {
 		flex-grow: 1;
 	}
 </style>

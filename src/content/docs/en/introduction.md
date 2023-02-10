@@ -1,25 +1,25 @@
 ---
-title: "Introduction"
-description: "Docs intro"
+title: "介绍页"
+description: "介绍此文章的用途"
 ---
 
-**Welcome to Astro!**
+**欢迎来到介绍页**
 
-This is the `docs` starter template. It contains all of the features that you need to build a Markdown-powered documentation site, including:
+这是文档入门模板。它包含了构建markdown支持的文档站点所需的所有功能，包括:
 
-- ✅ **Full Markdown support**
-- ✅ **Responsive mobile-friendly design**
-- ✅ **Sidebar navigation**
-- ✅ **Search (powered by Algolia)**
-- ✅ **Multi-language i18n**
-- ✅ **Automatic table of contents**
-- ✅ **Automatic list of contributors**
-- ✅ (and, best of all) **dark mode**
+- ✅全面Markdown支持
+- ✅响应式移动友好设计
+- ✅侧栏导航
+- ✅搜索(由Algolia提供)
+- ✅多语言i18n
+- ✅自动目录
+- ✅自动贡献者列表
+- ✅(最好的是)黑暗模式
 
-## Getting Started
+## 开始学习
 
-To get started with this theme, check out the `README.md` in your new project directory. It provides documentation on how to use and customize this template for your own project. Keep the README around so that you can always refer back to it as you build.
+要开始这个主题，请查看“README”。Md '在你的新项目目录。它提供了关于如何为您自己的项目使用和自定义此模板的文档。保留README，以便在构建时始终可以引用它。
 
-Found a missing feature that you can't live without? Please suggest it on Discord [(#ideas-and-suggestions channel)](https://astro.build/chat) and even consider adding it yourself on GitHub! Astro is an open source project and contributions from developers like you are how we grow!
+找到了你生活中不可或缺的缺失功能?请在Discord [(#ideas-and-suggestions channel)](https://astro.build/chat)上提出建议，甚至可以考虑自己在GitHub上添加它!Astro是一个开源项目，来自像您这样的开发人员的贡献是我们成长的动力!
 
-Good luck out there, Astronaut. 🧑‍🚀
+祝你好运，宇航员。 🧑‍🚀

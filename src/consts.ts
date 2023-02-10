@@ -1,15 +1,15 @@
 export const SITE = {
-	title: 'Documentation',
-	description: 'Your website description.',
-	defaultLanguage: 'en-us',
+	title: 'ttt学习文档',
+	description: '用于记录学习时候的笔记',
+	// defaultLanguage: 'en-us',
+	defaultLanguage: 'zh',
 } as const;
 
 export const OPEN_GRAPH = {
 	image: {
 		src: 'https://github.com/withastro/astro/blob/main/assets/social/banner-minimal.png?raw=true',
 		alt:
-			'astro logo on a starry expanse of space,' +
-			' with a purple saturn-like planet floating in the right foreground',
+			'logo图标',
 	},
 	twitter: 'astrodotbuild',
 };
@@ -36,11 +36,12 @@ export type Sidebar = Record<
 >;
 export const SIDEBAR: Sidebar = {
 	en: {
-		'Section Header': [
-			{ text: 'Introduction', link: 'en/introduction' },
-			{ text: 'Page 2', link: 'en/page-2' },
-			{ text: 'Page 3', link: 'en/page-3' },
+		'后端': [
+			{ text: '介绍', link: 'en/introduction' },
+			{ text: '子导航1', link: 'en/page-2' },
+			{ text: '子导航2', link: 'en/page-3' },
 		],
-		'Another Section': [{ text: 'Page 4', link: 'en/page-4' }],
+		'前端': [{ text: '子导航1', link: 'en/page-4' }],
+		'其他': [{ text: '子导航1', link: 'en/page-5' }],
 	},
 };
