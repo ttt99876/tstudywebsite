@@ -35,12 +35,24 @@ export type Sidebar = Record<
 >;
 export const SIDEBAR: Sidebar = {
 	en: {
-		'后端': [
-			{ text: '介绍', link: 'en/introduction' },
-			{ text: '子导航1', link: 'en/page-2' },
-			{ text: '子导航2', link: 'en/page-3' },
+		'前端': [
+			{ text: '简介', link: 'en/00-introduction' },
+			{ text: 'html', link: 'en/01-html-page' },
+			{ text: 'css', link: 'en/02-css-page' },
+			{ text: 'js', link: 'en/03-js-page' },
+			{ text: 'vue2', link: 'en/04-vue2-page' },
+			{ text: 'react', link: 'en/05-react-page' },
+			{ text: 'ts', link: 'en/06-ts-page' },
 		],
-		'前端': [{ text: '子导航1', link: 'en/page-4' }],
-		'其他': [{ text: '子导航1', link: 'en/page-5' }],
+		'后端': [
+			{ text: 'java', link: 'en/11-java-page' },
+			
+			{ text: 'spring-boot', link: 'en/12-spring-boot-page' },
+			{ text: 'py', link: 'en/13-py-page' },
+		],
+		'其他': [
+			{ text: '子导航1', link: 'en/page-5' },
+			{ text: '子导航1', link: 'en/page-5' },
+		],
 	},
 };
