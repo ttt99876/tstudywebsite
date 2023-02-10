@@ -1,8 +1,7 @@
 export const SITE = {
 	title: 'ttt学习文档',
 	description: '用于记录学习时候的笔记',
-	// defaultLanguage: 'en-us',
-	defaultLanguage: 'zh',
+	defaultLanguage: 'en-us',
 } as const;
 
 export const OPEN_GRAPH = {
