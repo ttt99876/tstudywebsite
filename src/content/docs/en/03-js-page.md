@@ -365,3 +365,189 @@ console.log(e);  // 输出：10
 console.log(f);  // 输出：2
 console.log(g);  // 输出：2
 ```
+## 循环语句
+### for
+适合用在已知循环次数的时候使用，语法如下：
+```js
+for(initialization; condition; increment) {
+    // 要执行的代码
+}
+```
++ initialization：为一个表达式或者变量声明，我们通常将该步骤称为“初始化计数器变量”，在循环过程中只会执行一次；
++ condition：为一个条件表达式，与 while 循环中的条件表达式功能相同，通常用来与计数器的值进行比较，以确定是否进行循环，通过该表达式可以设置循环的次数；
++ increment：为一个表达式，用来在每次循环结束后更新（递增或递减）计数器的值。
++ 以上三个是可以省略的，分号不能省略
++ 可以嵌套循环，如九九乘法表
+
+**案例**
+```js
+for(var i=1; i<=10>; i++) {
+    console.log(i);//1 2 3 4 5 6 7 8 9 10
+}
+```
+
+### while
+不知道循环次数的时候使用while,语法如下：
+```js
+while(条件表达式){
+    // 要执行的代码
+}
+```
+while循环在每次循环之前，会先对条件表达式进行求值，如果条件表达式结果为true，则执行{}中的代码，如果条件表达式的结果为false，则退出while循环，执行while循环之后的代码
+![image](/img/while.png)
+```js
+// 球1-100之间所有和
+var i =1;
+var sum=0;
+while(i<=100){
+    sum+=i;
+    i++
+     
+}
+console.log(sum);//5050
+```
+要是条件一直为true，则会进入死循环
+
+### do while
+与 while循环非常相似，不同在于。会先执行循环中的代码，再对条件表达式进行判断。因此无论条件是否真假，至少会执行一遍.语法如下
+```js
+do{
+    // 需要执行的代码
+}while(条件表达式)
+```
+![image](/img/do-while.png)
+```js
+// 计算1-100之间的和
+var i = 1;
+var sum = 0;
+do{
+    sum+=i;
+    i++;
+}while(i<=100)
+console.log(sum);//5050
+```
+### for in
+主要用来遍历对象，可以将对象中的属性依次循环出来，语法格式：
+```js
+for(vari in obj){
+    // 要执行的代码
+}
+```
+vari 是变量，每次循环时这个变量都会赋予不同的值
+
+obj 是要遍历的对象，在每次循环中，会将obj对象中的一个属性的键赋值给变量vari，直到对象中的所有属性都遍历完
+```js
+var person = {
+    name:"tt",
+    sex:"女",
+    age:18
+}
+for(var prop in person){
+    console.log(prop);//name sex age
+    console.log(person[prop]);//tt 女 18
+}
+```
+### for of
+是es6中新添的一个循环方式，可以轻松遍历数组或者对象，语法如下：
+```js
+for(vari of iterable){
+    // 要执行的代码
+}
+```
+vari 为一个变量，每次循环时这个变量都会被赋予不同的值，我们可以在后面的{ }中使用这个变量来进行一系列操作；
+
+iterable 为要遍历的内容，在每次循环中，会将 iterable 中的一个值赋值给变量 vari iterable 中的所有值都遍历完。
+
+```js
+//1、 定义一个数组
+var arr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'];
+for (let [index, val] of arr.entries()) {
+  console.log(index, val);
+}
+/*
+输出结果为：
+0 'a'
+1 'b'
+2 'c'
+3 'd'
+4 'e'
+5 'f'
+6 'g'
+7 'h'
+8 'i'
+9 'j'
+*/
+// 2、定义一个字符
+var str = "Hello World!";
+for (let value of str) {
+    console.log(value)
+}
+/*
+H
+e
+l
+o
+ 
+W
+o
+r
+l
+d
+!
+*/
+```
+### 跳出循环
+js提供了break和continue两个语句来实现退出循环和退出当前循环
+```js
+for(var i =0;i<10;i++){
+    if(i==5){
+        break;//遇到5退出循环
+    }
+      console.log(i)//0 1 2 3 4
+}
+```
+```js
+for(var i =0;i<10;i++){
+    if(i==5){
+        continue;//退出当前循环，后面的会继续
+    }
+      console.log(i)//0 1 2 3 4 6 7 8 9
+}
+```
+
+## 条件判断
+### if else
+程序根据不同的条件来执行不同的操作，if-else可以根据情况增加。语法如下：
+```js
+if(条件表达式){
+    // 当表达式成立时要执行的代码
+}else{
+   // 当表达式不成立时要执行的代码
+}
+```
+### switch case
+比if-else要简介和紧凑，执行效率高，其语法如下：
+```js
+switch (表达式){
+    case value1:
+        statements1  // 当表达式的结果等于 value1 时，则执行该代码
+        break;
+    case value2:
+        statements2  // 当表达式的结果等于 value2 时，则执行该代码
+        break;
+    ......
+    case valueN:
+        statementsN  // 当表达式的结果等于 valueN 时，则执行该代码
+        break;
+    default :
+        statements  // 如果没有与表达式相同的值，则执行该代码
+}
+```
+switch 语句根据表达式的值，依次与 case 子句中的值进行比较：
+
++ 如果两者相等，则执行其后的语句段，当遇到 break 关键字时则跳出整个 switch 语句。
+
++ 如果不相等，则继续匹配下一个 case。
+
++ switch 语句包含一个可选的 default 关键字，如果在前面的 case 中没有找到相等的条件，则执行 default 后面的语句段。
+
