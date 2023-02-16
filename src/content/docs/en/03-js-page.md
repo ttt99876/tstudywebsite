@@ -551,3 +551,149 @@ switch 语句根据表达式的值，依次与 case 子句中的值进行比较�
 
 + switch 语句包含一个可选的 default 关键字，如果在前面的 case 中没有找到相等的条件，则执行 default 后面的语句段。
 
+## 函数
+函数是一组执行特定任务（具有特定功能）的，可以重复使用的代码块。函数包含自定义函数（自己创建的）和内置函数（系统约定给出的）。
+
+自定义函数需要function关键字创建，语法格式如下：
+```js
+function 函数名字(参数){
+    //函数中的代码
+    //return返回值
+}
+//调用
+函数名字()
+```
+参数：可以没有，可以多个，用逗号隔开
+
+return：通常在函数的末尾定义，当函数运行到 return 语句时会立即停止运行，并返回到调用函数的地方继续执行。
+
+## 对象
+对象指一个物体，这个物体有属性和行为，如
+```js
+var person = {
+    name: "Peter",
+    age: 28,
+    gender: "Male",
+    displayName: function() {
+        document.write(this.name);
+    }
+};
+```
+创建了一个名为 person 的对象，该对象中包含三个属性 name、age、gender 和一个方法 displayName()。displayName() 方法中的 this.name 表示访问当前对象中的 name 属性，会被 JavaScript 解析为 person.name。
+
+获取值：对象名.属性名  或者 对象名["属性名"]
+
+## 事件对象
+事件是当用户与网页交互时发生的事情，如点击按钮，在文本框中输入文本等。事件名称都是以on开头，常用的事件如下
+1. 鼠标、键盘事件
+
+事件|描述
+-|-:
+onclick	    |点击鼠标时触发此事件
+ondblclick  |双击鼠标时触发此事件
+onmousedown |按下鼠标时触发此事件
+onmouseup	|鼠标按下后又松开时触发此事件
+onmouseover |当鼠标移动到某个元素上方时触发此事件
+onmousemove |移动鼠标时触发此事件    
+onmouseout  |当鼠标离开某个元素范围时触发此事件
+onkeypress  |当按下并松开键盘上的某个键时触发此事件
+onkeydown	|当按下键盘上的某个按键时触发此事件
+onkeyup	    |当放开键盘上的某个按键时触发此事件
+
+2. 窗口事件
+
+事件|描述
+-|-:
+onabort	       |图片在下载过程中被用户中断时触发此事件
+onbeforeunload |当前页面的内容将要被改变时触发此事件
+onerror	       |出现错误时触发此事件
+onload	       |页面内容加载完成时触发此事件
+onmove	       |当移动浏览器的窗口时触发此事件
+onresize	   |当改变浏览器的窗口大小时触发此事件
+onscroll	   |当滚动浏览器的滚动条时触发此事件
+onstop	       |当按下浏览器的停止按钮或者正在下载的文件被中断时触发此事件
+oncontextmenu  |当弹出右键上下文菜单时触发此事件
+onunload	   |改变当前页面时触发此事件
+
+3. 表单事件
+
+事件|描述
+-|-:
+onblur	 |当前元素失去焦点时触发此事件
+onchange |当前元素失去焦点并且元素的内容发生改变时触发此事件
+onfocus	 |当某个元素获得焦点时触发此事件
+onreset	 |当点击表单中的重置按钮时触发此事件
+onsubmit |当提交表单时触发此事件
+
+3. 案例
+
+(1) 为指定的 HTML 元素定义鼠标点击事件（即在该元素上单击鼠标左键时触发的事件）
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+</head>
+<body>
+    <button type="button" onclick="myBtn()">按钮</button>
+    <script type="text/javascript">
+        function myBtn(){
+            alert("Hello World!");
+        }
+    </script>
+</body>
+</html>
+``` 
+
+(2) 使用 JavaScript 中提供的内置函数来为指定元素绑定事件处理程序
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+</head>
+<body>
+    <button type="button" id="myBtn">按钮</button>
+    <script>
+        function sayHello() {
+            alert('Hello World!');
+        }
+        document.getElementById("myBtn").onclick = sayHello;
+    </script>
+</body>
+</html>
+``` 
+
+## 作用域
+可以在任意位置声明变量，但在不同的位置会影响变量的可用范围，这个范围称为作用域，有两种作用域：全局作用域和局部作用域
+
+1. 全局作用域
+
+指变量可以在当前脚本的任意位置访问，拥有全局作用域的变量也成为了“全局变量”，特征表现为：
+
+（1）最外层的函数和在最外层函数外面定义的变量拥有全局作用域
+
+（2）所有未定义直接复制的变量拥有全局作用域
+
+（3）所有window对象的属性拥有全局作用域，如window.name
+
+```js
+// 所有具有全局作用域的变量都会被绑定到 window 对象中，成为 window 对象的一个属性
+var str = "JavaScript";
+document.write(str);                    // 输出：JavaScript
+document.write(window.str);             // 输出：JavaScript
+document.write(str === window.str);     // 输出：true
+```
+
+2. 局部作用域
+
+在函数内部声明的变量具有局部作用域，拥有局部作用域的变量也称为“局部变量”，局部变量只能在其作用域中（函数内部）使用。在函数内定义的局部变量只有在函数被调用时才会生成，当函数执行完毕后会被立即销毁
+```js
+function myFun(){
+    var str = "Hello World!";
+    document.write(str);    // 输出：Hello World!
+}
+document.write(str);        // 报错：str is not defined
+```
