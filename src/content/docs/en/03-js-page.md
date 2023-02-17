@@ -1377,5 +1377,100 @@ setInterval()	  	|创建一个定时器，按照指定的时长（以毫秒计�
 setTimeout()	  	|创建一个定时器，在经过指定的时长（以毫秒计）后调用指定函数或表达式，只执行一次
 stop()	          	|停止页面载入
 postMessage()	  	|安全地实现跨源通信
-                      	                              
-                     	   
+
+##  Navigator
+是window对象的一个属性，通过这个属性可以获取浏览器的基本信息  
+
++ navigator 对象中常用的属性及其描述
+
+属性|描述
+-|-:
+appCodeName	   |返回当前浏览器的内部名称（开发代号）
+appName	       |返回浏览器的官方名称
+appVersion	   |返回浏览器的平台和版本信息
+cookieEnabled  |返回浏览器是否启用 cookie，启用返回 true，禁用返回 false
+onLine	       |返回浏览器是否联网，联网则返回 true，断网则返回 false
+platform	   |返回浏览器运行的操作系统平台
+userAgent	   |返回浏览器的厂商和版本信息，即浏览器运行的操作系统、浏览器的版本、名称
+         	         
++ navigator 对象中常用的方法及其描述 
+
+方法|描述
+-|-:
+javaEnabled()  |返回浏览器是否支持运行 Java Applet 小程序，支持则返回 true，不支持则返回 false
+sendBeacon()   |向浏览器异步传输少量数据
+
+## Screen
+获取屏幕信息，如分辨率、宽度等
+
++ screen 对象中常用的属性及其描述
+
+属性|描述
+-|-:
+availTop	 |返回屏幕上方边界的第一个像素点（大多数情况下返回 0）
+availLeft	 |返回屏幕左边边界的第一个像素点（大多数情况下返回 0）
+availHeight	 |返回屏幕的高度（不包括 Windows 任务栏）
+availWidth	 |返回屏幕的宽度（不包括 Windows 任务栏）
+colorDepth	 |返回屏幕的颜色深度（color depth），根据 CSSOM（CSS 对象模型）视图，为兼容起见，该值总为 24。
+height	     |返回屏幕的完整高度
+pixelDepth	 |返回屏幕的位深度/色彩深度（bit depth），根据 CSSOM（CSS 对象模型）视图，为兼容起见，该值总为 24
+width	     |返回屏幕的完整宽度
+orientation	 |返回当前屏幕的方向
+
+## location
+获取url的信息，包含端口号等
+
++ location 对象中常用的属性及其描述
+
+属性|描述
+-|-:
+hash	 |返回一个 URL 中锚的部分，例如：http://c.biancheng.net#js 中的 #js。
+host	 |返回一个 URL 的主机名和端口号，例如 http://c.biancheng.net:8080。
+hostname |返回一个 URL 的主机名，例如 http://c.biancheng.net。
+href	 |返回一个完整的 URL，例如 http://c.biancheng.net/javascript/location-object.html。
+pathname |返回一个 URL 中的路径部分，开头有个/。
+port	 |返回一个 URL 中的端口号，如果 URL 中不包含明确的端口号，则返回一个空字符串' '。
+protocol |返回一个 URL 协议，即 URL 中冒号:及其之前的部分，例如 http: 和 https:。
+search	 |返回一个 URL 中的查询部分，即 URL 中?及其之后的一系列查询参数。
+
++ location 对象中常用的方法及其描述
+
+方法|描述
+-|-:
+assign()	 |加载指定的 URL，即载入指定的文档。
+reload()	 |重新加载当前 URL。
+replace()	 |用指定 URL 替换当前的文档，与 assign() 方法不同的是，使用 replace() 替换的新页面不会保存在浏览历史中，用户不能使用后退来返回该页面。
+toString()	 |与 href 属性的效果相同，以字符串的形式返回当前完整的 URL。
+        	    	    	    
+## history
+获取浏览历史。包括通过浏览器浏览过的页面，以及当前页面中通过iframe加载的页面。我们可以通过 window 对象中的 history 属性来获取 history 对象，由于 window 对象是一个全局对象，因此在使用window.history时可以省略 window 前缀，例如window.history.go()可以简写为history.go()。
+
++ history 对象中常用的属性及其描述
+
+属性|描述
+-|-:
+length	         |返回浏览历史的数目，包含当前已经加载的页面。
+scrollRestoration|利用浏览器特性，使我们在返回上一页或者下一页时，将页面滚动到之前浏览的位置，该属性有两个值，分别是 auto（表示滚动）与 manual（表示不滚动）。
+state |返回浏览器在当前 URL 下的状态信息，如果没有调用过 pushState() 或 replaceState() 方法，则返回默认值 null。
+
++ history 对象中常用的方法及其描述
+
+方法|描述
+-|-:
+back()		         | 参照当前页面，返回历史记录中的上一条记录（即返回上一页），您也可以通过点击浏览器工具栏中的←按钮来实现同样的效果。
+forward()|参照当前页面，前往历史记录中的下一条记录（即前进到下一页），您也可以通过点击浏览器工具栏中的→按钮来实现同样的效果。
+go() |参照当前页面，根据给定参数，打开指定的历史记录，例如 -1 表示返回上一页，1 表示返回下一页。
+pushState() |向浏览器的历史记录中插入一条新的历史记录。
+replaceState() |使用指定的数据、名称和 URL 来替换当前历史记录。
+
+   
+	
+	
+	
+	
+
+
+	
+	
+	
+
