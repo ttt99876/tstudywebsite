@@ -568,6 +568,8 @@ function 函数名字(参数){
 return：通常在函数的末尾定义，当函数运行到 return 语句时会立即停止运行，并返回到调用函数的地方继续执行。
 
 ## 对象
+1. 自定义对象
+
 对象指一个物体，这个物体有属性和行为，如
 ```js
 var person = {
@@ -583,6 +585,438 @@ var person = {
 
 获取值：对象名.属性名  或者 对象名["属性名"]
 
+2. 内置对象
+
+（1）Number对象
+
+通过new来创建一个实例对象，语法：
+```js
+var 实例对象 = new Number()
+var myNum = new Number()
+
+```
+
+当 Number() 函数和 new 运算符一起使用时，会创建一个新的 Number 对象。
+
+如果不用 new 运算符，把 Number() 当作一个函数来调用，则会将其中的参数转换为一个数值，并且返回这个值（如果转换失败，则返回 NaN）。
+```js
+var myNum = new Number('12')
+console.log(myNum)//对象  Number {12}
+
+var myNum1 = Number('12')
+console.log(myNum1)//12
+
+```
++ Number对象提供的属性：
+
+属性|描述
+-|-:
+Number.MAX_VALUE	     |JavaScript 中所能表示的最大值
+Number.MIN_VALUE	     |JavaScript 中所能表示的最小值
+Number.NaN	             |非数字
+Number.NEGATIVE_INFINITY |负无穷，在溢出时返回
+Number.POSITIVE_INFINITY |正无穷，在溢出时返回
+Number.EPSILON	         |表示 1 与 Number 所能表示的大于 1 的最小浮点数之间的差
+Number.MIN_SAFE_INTEGER	 |最小安全整数，即 -9007199254740991
+Number.MAX_SAFE_INTEGER	 |最大安全整数，即 9007199254740991
+
++ Number对象提供的方法：
+
+方法|描述
+-|-:
+Number.parseFloat()	     |将字符串转换成浮点数，和全局方法 parseFloat() 作用相同
+Number.parseInt()	     |将字符串转换成整型数字，和全局方法 parseInt() 作用相同
+Number.isFinite()	     |判断 Number 对象是否为有穷数
+Number.isInteger()	     |判断 Number 对象是否为整数
+Number.isNaN()	         |判断 Number 对象是否为 NaN 类型
+Number.isSafeInteger()	 |判断 Number 对象是否为安全整数，即范围为 -(2⁵³ - 1)到 2⁵³ - 1 之间的整数
+Number.toString()	     |把 Number 对象转换为字符串，使用指定的基数
+Number.toLocaleString()	 |把 Number 对象转换为字符串，使用本地数字格式顺序
+Number.toFixed()	     |把 Number 对象转换为字符串，结果的小数点后有指定位数的数字
+Number.toExponential()	 |把 Number 对象的值转换为指数计数法
+Number.toPrecision()	 |把 Number 对象格式化为指定的长度
+Number.valueOf()	     |返回一个 Number 对象的基本数字值
+
+（2）String对象
+
+用于处理字符串，其中提供了大量操作字符串的方法，以及一些属性。创建 String 对象的语法格式如下：
+```js
+var val = new String(value);
+var val = String(value);
+```
+字符串和字符串对象之间能够自由转换，因此不论是创建字符串对象还是直接声明字符串类型的变量，都可以直接使用字符串对象中提供的方法和属性。
+
++ String对象提供的属性：
+
+属性|描述
+-|-:
+constructor	     |获取创建此对象的 String() 函数的引用
+length	   	     |获取字符串的长度
+prototype	     |通过该属性您可以向对象中添加属性和方法
+	
+```js
+var str = new String('JavaScript');
+String.prototype.name = null;
+str.name = "Hello World!";
+document.write(str.constructor + "<br>");       // 输出：function String() { [native code] }
+document.write(str.length + "<br>");            // 输出：10
+document.write(str.name);                       // 输出：Hello World!
+``` 
+
++ String对象提供的方法：
+
+方法|描述
+-|-:
+anchor()	          |创建一个 HTML 锚点，即生成一个<a>标签，标签的 name 属性为 anchor() 方法中的参数
+big()	              |用大号字体显示字符串
+blink()	              |显示闪动的字符串
+bold()	              |使用粗体显示字符串
+charAt()	          |返回在指定位置的字符
+charCodeAt()          |返回指定字符的 Unicode 编码
+concat()	          |拼接字符串
+fixed()	              |以打字机文本显示字符串
+fontcolor()	          |使用指定的颜色来显示字符串
+fontsize()	          |使用指定的尺寸来显示字符串
+fromCharCode()	      |将字符编码转换为一个字符串
+indexOf()	          |检索字符串，获取给定字符串在字符串对象中首次出现的位置
+italics()	          |使用斜体显示字符串
+lastIndexOf()	      |获取给定字符串在字符串对象中最后出现的位置
+link()	              |将字符串显示为链接
+localeCompare()	      |返回一个数字，并使用该数字来表示字符串对象是大于、小于还是等于给定字符串
+match()	              |根据正则表达式匹配字符串中的字符
+replace()	          |替换与正则表达式匹配的子字符串
+search()	          |获取与正则表达式相匹配字符串首次出现的位置
+slice()	              |截取字符串的片断，并将其返回
+small()	              |使用小字号来显示字符串
+split()	              |根据给定字符将字符串分割为字符串数组
+strike()	          |使用删除线来显示字符串
+sub()	              |把字符串显示为下标
+substr()	          |从指定索引位置截取指定长度的字符串
+substring()	          |截取字符串中两个指定的索引之间的字符
+sup()	              |把字符串显示为上标
+toLocaleLowerCase()	  |把字符串转换为小写
+toLocaleUpperCase()	  |把字符串转换为大写
+toLowerCase()	      |把字符串转换为小写
+toUpperCase()	      |把字符串转换为大写
+toString()	          |返回字符串
+valueOf()	          |返回某个字符串对象的原始值
+
+```js
+var str = new String('JavaScript教程');
+
+document.write(str.anchor("myanchor") + "<br>");     // 生成一段 HTML 代码：<a name="myanchor">JavaScript教程</a>
+document.write(str.big() + "<br>");                  // 生成一段 HTML 代码：<big>JavaScript教程</big>
+document.write(str.blink() + "<br>");                // 生成一段 HTML 代码：<blink>JavaScript教程</blink>
+document.write(str.bold() + "<br>");                 // 生成一段 HTML 代码：<b>JavaScript教程</b>
+document.write(str.charAt(10) + "<br>");             // 获取 str 中的第 11 个字符，输出：教
+document.write(str.charCodeAt(10) + "<br>");         // 获取 str 中第 11 个字符的 Unicode 编码，输出：25945
+document.write(str.concat(" String 对象") + "<br>"); // 将字符串“ String 对象”拼接到字符串 str 之后，输出：JavaScript教程 String 对象
+document.write(str.fixed() + "<br>");                // 生成一段 HTML 代码：<tt>JavaScript教程</tt>
+document.write(str.fontcolor("red") + "<br>");       // 生成一段 HTML 代码：<font color="red">JavaScript教程</font>
+document.write(str.fontsize(2) + "<br>");            // 生成一段 HTML 代码：<font size="2">JavaScript教程</font>
+document.write(String.fromCharCode(72,69,76,76,79) + "<br>");             // 将 Unicode 编码转换为具体的字符，输出：HELLO
+document.write(str.indexOf("Script") + "<br>");             // 获取字符串“Script”在 str 中首次出现的为，输出：4
+document.write(str.italics() + "<br>");                     // 生成一段 HTML 代码：<i>JavaScript教程</i>
+document.write(str.lastIndexOf("a") + "<br>");              // 获取字符串“a”在 str 中最后一次出现的位置，输出 3
+document.write(str.link("http://c.biancheng.net/") + "<br>");  // 生成一段 HTML 代码：<a href="http://c.biancheng.net/">JavaScript教程</a>
+document.write(str.localeCompare("JavaScript") + "<br>");       // 比较字符串对象与给定字符串，返回：1
+document.write(str.match(/[abc]/g) + "<br>");                   // 根据正则 /[abc]/g 检索 str，返回：a,a,c
+document.write(str.replace(/[abc]/g, "Y") + "<br>");            // 使用字符串“Y”替换正则 /[abc]/g 匹配的字符，返回：JYvYSYript教程
+document.write(str.search(/[Script]/g) + "<br>");               // 获取与正则匹配的字符串首次出现的位置，返回：4
+document.write(str.slice(6,11) + "<br>");           // 截取字符串（获取 str 中第 7 到第 11 个字符），返回：ript教
+document.write(str.small() + "<br>");               // 生成一段 HTML 代码：<small>JavaScript教程</small>
+document.write(str.split("a") + "<br>");            // 根据“a”将字符串 str 拆分为数组，返回：J,v,Script教程
+document.write(str.strike() + "<br>");              // 生成一段 HTML 代码：<strike>JavaScript教程</strike>
+document.write(str.sub() + "<br>");                 // 生成一段 HTML 代码：<sub>JavaScript教程</sub>
+document.write(str.substr(3, 7) + "<br>");          // 从第 4 个字符开始，向后截取 7 个字符，返回：aScript
+document.write(str.substring(3, 7) + "<br>");       // 截取字符串（获取 str 中第 4 到第 7 个字符），返回：aScr
+document.write(str.sup() + "<br>");                 // 生成一段 HTML 代码：<sup>JavaScript教程</sup>
+document.write(str.toLocaleLowerCase() + "<br>");   // 返回：javascript教程
+document.write(str.toLocaleUpperCase() + "<br>");   // 返回：JAVASCRIPT教程
+document.write(str.toLowerCase() + "<br>");         // 返回：javascript教程
+document.write(str.toUpperCase() + "<br>");         // 返回：JAVASCRIPT教程
+document.write(str.toString() + "<br>");            // 返回：JavaScript教程
+document.write(str.valueOf() + "<br>");             // 返回：JavaScript教程
+```
+
+（3）Array对象
+
+数组是值的有序集合，数组中的每个值成为一个元素，每个元素在数组中都有一个数字位置，称为索引，从0开始，依次递增，语法如下：
+```js
+// values为数组中各个元素组成的列表，多个元素之间使用逗号隔开
+var arr = new Array(values);
+var arr = Array(values);
+```
+**注意**：在使用 new Array() 来定义数组时，如果只提供一个数值参数，那么这个数值将用来表示数组的初始长度，例如new Array(5)表示定义一个长度为 5 的数组。JavaScript 中，数组允许的最大长度为 2³²-1，即 4294967295
+```js
+var fruits = new Array( "apple", "orange", "mango" );
+console.log(fruits);  // 输出：["apple", "orange", "mango"]
+
+var fruits = new Array( 5 );//长度为5的一个数组
+```
+
++ Array对象提供的属性：
+
+属性|描述
+-|-:
+constructor	     |返回创建数组对象的原型函数
+length	   	     |设置或返回数组中元素的个数
+prototype	     |通过该属性您可以向对象中添加属性和方法
+
++ Array对象提供的方法：
+
+方法|描述
+-|-:
+copyWithin()	     |从数组的指定位置拷贝元素到数组的另一个指定位置中
+entries()	   	     |返回数组的可迭代对象
+every()	     	     |检测数值元素的每个元素是否都符合条件
+fill()	     	     |使用一个固定值来填充数组
+filter()	 	     |检测数值元素，并返回符合条件所有元素的数组
+find()	     	     |返回符合传入函数条件的数组元素
+findIndex()	 	     |返回符合传入函数条件的数组元素索引
+forEach()	 	     |数组每个元素都执行一次回调函数
+from()	     	     |通过给定的对象中创建一个数组
+includes()	 	     |判断一个数组是否包含一个指定的值
+indexOf()	 	     |搜索数组中的元素，并返回它所在的位置
+isArray()	 	     |判断对象是否为数组
+join()	     	     |把数组的所有元素放入一个字符串
+keys()	     	     |返回数组的可迭代对象，包含原始数组的键（key）
+lastIndexOf()	     |搜索数组中的元素，并返回它最后出现的位置
+map()	     	     |通过指定函数处理数组的每个元素，并返回处理后的数组
+pop()	     	     |删除数组的最后一个元素并返回删除的元素
+push()	     	     |向数组的末尾添加一个或更多元素，并返回数组的长度
+reduce()	 	     |累加（从左到右）数组中的所有元素，并返回结果
+reduceRight()	     |累加（从右到左）数组中的所有元素，并返回结果
+reverse()	 	     |反转数组中元素的顺序
+shift()	     	     |删除并返回数组的第一个元素
+slice()	     	     |截取数组的一部分，并返回这个新的数组
+some()	     	     |检测数组元素中是否有元素符合指定条件
+sort()	     	     |对数组的元素进行排序
+splice()	 	     |从数组中添加或删除元素
+toString()	 	     |把数组转换为字符串，并返回结果
+unshift()	 	     |向数组的开头添加一个或多个元素，并返回新数组的长度
+valueOf()	 	     |返回数组对象的原始值                                       	            	                           
+
+（4）Date对象
+
+可以访问计算机系统时间，提供了很多方法用于管理、操作和格式化时间/日期的方法，只能通过new，语法如下：
+```js
+var time = new Date();
+var time = new Date(milliseconds);
+var time = new Date(datestring);
+var time = new Date(year, month, date[, hour, minute, second, millisecond]);
+```
+**参数说明如下**：
+
++ 不提供参数：若调用 Date() 函数时不提供参数，则创建一个包含当前时间和日期的 Date 对象；
+
++ milliseconds（毫秒）：若提供一个数值作为参数，则会将这个参数视为一个以毫秒为单位的时间值，并返回自 1970-01-01 00:00:00 起，经过指定毫秒数的时间，例如 new Date(5000) 会返回一个 1970-01-01 00:00:00 经过 5000 毫秒之后的时间；
+
++ datestring（日期字符串）：若提供一个字符串形式的日期作为参数，则会将其转换为具体的时间，日期的字符串形式有两种，如下所示：
+
+```
+YYYY/MM/dd HH:mm:ss（推荐）：若省略时间部分，则返回的 Date 对象的时间为 00:00:00；
+YYYY-MM-dd HH:mm:ss：若省略时间部分，则返回的 Date 对象的时间为 08:00:00（加上本地时区），若不省略，在 IE 浏览器中会转换失败。
+```
+
+**将具体的年月日、时分秒转换为 Date 对象，其中：**
+
++ year：表示年，为了避免错误的产生，推荐使用四位的数字来表示年份；
+
++ month：表示月，0 代表 1 月，1 代表 2 月，以此类推；
+
++ date：表示月份中的某一天，1 代表 1 号，2 代表 2 号，以此类推；
+
++ hour：表示时，以 24 小时制表示，取值范围为 0 ~ 23；
+
++ minute：表示分，取值范围为 0 ~ 59；
+
++ second：表示秒，取值范围为 0 ~ 59；
+
++ millisecond：表示毫秒，取值范围为 0 ~ 999。
+
+
++ Date对象提供的属性：
+
+属性|描述
+-|-:
+constructor	     |返回创建Date对象的原型函数
+prototype	     |通过该属性您可以向对象中添加属性和方法
+
++ Date对象提供的方法：
+
+方法|描述
+-|-:
+getDate()	            |从 Date 对象返回一个月中的某一天 (1 ~ 31)
+getDay()	            |从 Date 对象返回一周中的某一天 (0 ~ 6)
+getMonth()	            |从 Date 对象返回月份 (0 ~ 11)
+getFullYear()	        |从 Date 对象返回四位数字的年份
+getYear()	            |已废弃，请使用 getFullYear() 方法代替
+getHours()	            |返回 Date 对象的小时 (0 ~ 23)
+getMinutes()	        |返回 Date 对象的分钟 (0 ~ 59)
+getSeconds()	        |返回 Date 对象的秒数 (0 ~ 59)
+getMilliseconds()	    |返回 Date 对象的毫秒(0 ~ 999)
+getTime()	            |返回 1970 年 1 月 1 日至今的毫秒数
+getTimezoneOffset()	    |返回本地时间与格林威治标准时间 (GMT) 的分钟差
+getUTCDate()	        |根据通用时间从 Date 对象返回月中的一天 (1 ~ 31)
+getUTCDay()	            |根据通用时间从 Date 对象返回周中的一天 (0 ~ 6)
+getUTCMonth()	        |根据通用时间从 Date 对象返回月份 (0 ~ 11)
+getUTCFullYear()	    |根据通用时间从 Date 对象返回四位数的年份
+getUTCHours()	        |根据通用时间返回 Date 对象的小时 (0 ~ 23)
+getUTCMinutes()	        |根据通用时间返回 Date 对象的分钟 (0 ~ 59)
+getUTCSeconds()	        |根据通用时间返回 Date 对象的秒钟 (0 ~ 59)
+getUTCMilliseconds()    |根据通用时间返回 Date 对象的毫秒(0 ~ 999)
+parse()	                |返回1970年1月1日午夜到指定日期（字符串）的毫秒数
+setDate()	            |设置 Date 对象中月的某一天 (1 ~ 31)
+setMonth()	            |设置 Date 对象中月份 (0 ~ 11)
+setFullYear()	        |设置 Date 对象中的年份（四位数字）
+setYear()	            |已废弃，请使用 setFullYear() 方法代替
+setHours()	            |设置 Date 对象中的小时 (0 ~ 23)
+setMinutes()	        |设置 Date 对象中的分钟 (0 ~ 59)
+setSeconds()	        |设置 Date 对象中的秒钟 (0 ~ 59)
+setMilliseconds()	    |设置 Date 对象中的毫秒 (0 ~ 999)
+setTime()	            |以毫秒设置 Date 对象
+setUTCDate()	        |根据通用时间设置 Date 对象中月份的一天 (1 ~ 31)
+setUTCMonth()	        |根据通用时间设置 Date 对象中的月份 (0 ~ 11)
+setUTCFullYear()	    |根据通用时间设置 Date 对象中的年份（四位数字）
+setUTCHours()	        |根据通用时间设置 Date 对象中的小时 (0 ~ 23)
+setUTCMinutes()	        |根据通用时间设置 Date 对象中的分钟 (0 ~ 59)
+setUTCSeconds()	        |根据通用时间设置 Date 对象中的秒钟 (0 ~ 59)
+setUTCMilliseconds() |根据通用时间设置 Date 对象中的毫秒 (0 ~ 999)
+toSource()	            |返回该对象的源代码
+toString()	            |把 Date 对象转换为字符串
+toTimeString()	        |把 Date 对象的时间部分转换为字符串
+toDateString()	        |把 Date 对象的日期部分转换为字符串
+toGMTString()	        |已废弃，请使用 toUTCString() 方法代替
+toUTCString()	        |根据通用时间，把 Date 对象转换为字符串
+toLocaleString()	    |根据本地时间格式，把 Date 对象转换为字符串
+toLocaleTimeString() |根据本地时间格式，把 Date 对象的时间部分转换为字符串
+toLocaleDateString() |根据本地时间格式，把 Date 对象的日期部分转换为字符串
+UTC()	                |根据通用时间返回 1970 年 1 月 1 日 到指定日期的毫秒数
+valueOf()	            |返回 Date 对象的原始值
+
+（5）Math对象
+
+提供了一些数学中常用的常量值和函数，用来实现一些数学中常见计算，如计算平均值、求绝对值、四舍五入等。调用 Math 对象中的属性和方法无需预先使用 new 运算符来创建它，直接将 Math 作为对象调用即可，例如：
+```js
+var pi_val = Math.PI;                 // 数学中 π 的值：3.141592653589793
+var abs_val = Math.sin(-5.35);  // -5.35 的绝对值：5.35
+```
+
++ Math对象提供的属性：
+
+属性|描述
+-|-:
+E	     |返回算术常量 e，即自然对数的底数（约等于 2.718）
+LN2	     |返回 2 的自然对数（约等于 0.693）
+LN10	 |返回 10 的自然对数（约等于 2.302）
+LOG2E	 |返回以 2 为底的 e 的对数（约等于 1.443）
+LOG10E   |返回以 10 为底的 e 的对数（约等于 0.434）
+PI	     |返回圆周率 π（约等于 3.14159）
+SQRT1_2  |返回返回 2 的平方根的倒数（约等于 0.707）
+SQRT2	 |返回 2 的平方根（约等于 1.414）
+  	 	
+
++ Math对象提供的方法：
+
+方法|描述
+-|-:
+abs(x)	                |返回 x 的绝对值
+acos(x)	                |返回 x 的反余弦值
+acosh(x)	            |返回 x 的反双曲余弦值
+asin(x)	                |返回 x 的反正弦值
+asinh(x)	            |返回 x 的反双曲正弦值
+atan(x)	                |返回 x 的反正切值
+atanh(x)	            |返回 x 的反双曲正切值
+atan2(y,x)	            |返回 y/x 的反正切值
+cbrt(x)	                |返回 x 的立方根
+ceil(x)	                |对 x 进行向上取整，即返回大于 x 的最小整数
+clz32(x)	            |返回将 x 转换成 32 无符号整形数字的二进制形式后，开头 0 的个数
+cos(x)	                |返回 x 的余弦值
+cosh(x)	                |返回 x 的双曲余弦值
+exp(x)	                |返回算术常量 e 的 x 次方，即 Ex
+expm1(x)	            |返回 exp(x) - 1 的值
+floor(x)	            |对 x 进行向下取整，即返回小于 x 的最大整数
+fround(x)	            |返回最接近 x 的单精度浮点数
+hypot([x, [y, [...]]])  |返回所有参数平方和的平方根
+imul(x, y)	            |将参数 x、y 分别转换位 32 位整数，并返回它们相乘后的结果
+log(x)	                |返回 x 的自然对数
+log1p(x)	            |返回 x 加 1 后的自然对数
+log10(x)	            |返回 x 以 10 为底的对数
+log2(x)	                |返回 x 以 2 为底的对数
+max([x, [y, [...]]])    |返回多个参数中的最大值
+min([x, [y, [...]]])    |返回多个参数中的最小值
+pow(x,y)	            |返回 x 的 y 次幂
+random()	            |返回一个 0 到 1 之间的随机数
+round(x)	            |返回 x 四舍五入后的整数
+sign(x)	                |返回 x 的符号，即一个数是正数、负数还是 0
+sin(x)	                |返回 x 的正弦值
+sinh(x)	                |返回 x 的双曲正弦值
+sqrt(x)	                |返回 x 的平方根
+tan(x)	                |返回 x 的正切值
+tanh(x)	                |返回 x 的双曲正切值
+toSource()	            |返回字符串"Math"
+trunc(x)	            |返回 x 的整数部分
+valueOf()	            |返回 Math 对象的原始值
+
+
+（6）RegExp对象
+
+是一种用于匹配字符串或特殊字符的一种逻辑公式。所谓逻辑公式就是由一些特定字符组成的，用来表示某些规则的特殊字符串，可以表达对字符串数据的过滤逻辑，创建RegExp对象有两种方法：
+```js
+var patt = new RegExp(pattern, modifiers);
+var patt = /pattern/modifiers;
+```
+**参数说明如下**：
+
+pattern：正则表达式，按照正则表达式的语法定义的正则表达式；
+
+modifiers：修饰符，用来设置字符串的匹配模式，可选值如下表所示：
+
+修饰符|描述
+-|-:
+i |执行对大小写不敏感的匹配
+g |执行全局匹配（查找所有的匹配项，而非在找到第一个匹配项后停止）
+m |执行多行匹配
+s |允许使用.匹配换行符
+u |使用 Unicode 码的模式进行匹配
+y |执行“粘性”搜索，匹配从目标字符串的当前位置开始
+
+**注意**：当使用 new 关键字创建 RegExp 对象时，需要将正则表达式中的特殊字符转义，即在特殊字符前加反斜杠\，例如\\w+。						
+
+正则表达式由字母、数字、标点以及一些特殊特殊字符组成，例如/abc/、/(\d+)\.\d*/，建议去百度直接搜索最新的，如手机号码正则表达式
+
++ RegExp 对象中提供了一些列属性来执行正则表达式
+
+属性|描述
+-|-:
+constructor |返回一个函数，该函数是一个创建 RegExp 对象的原型
+global	    |判断是否设置了修饰符 "g"
+ignoreCase  |判断是否设置了修饰符 "i"
+lastIndex	|用于规定下次匹配的起始位置
+multiline	|判断是否设置了修饰符 "m"
+source	    |返回正则表达式的匹配模式
+	 	 
+
++ RegExp 对象中提供了一些列方法来执行正则表达式
+
+方法|描述
+-|-:
+compile()  |在 1.5 版本中已废弃，编译正则表达式
+exec()	   |在字符串搜索匹配项，并返回一个数组，若没有匹配项则返回 null
+test()	   |测试字符串是否与正则表达式匹配，匹配则返回 true，不匹配则返回 false
+toString() |返回表示指定对象的字符串
+
++ String 对象中也提供了一些方法来执行正则表达式	
+  
+方法|描述
+-|-:
+search()   |在字符串中搜索匹配项，并返回第一个匹配的结果，若没有找到匹配项则返回 -1
+match()	   |在字符串搜索匹配项，并返回一个数组，若没有匹配项则返回 null
+matchAll() |在字符串搜索所有匹配项，并返回一个迭代器（iterator）
+replace()  |替换字符串中与正则表达式相匹配的部分
+split()	   |按照正则表达式将字符串拆分为一个字符串数组
+	  		  
 ## 事件对象
 事件是当用户与网页交互时发生的事情，如点击按钮，在文本框中输入文本等。事件名称都是以on开头，常用的事件如下
 1. 鼠标、键盘事件
