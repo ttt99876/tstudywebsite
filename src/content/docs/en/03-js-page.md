@@ -1131,3 +1131,181 @@ function myFun(){
 }
 document.write(str);        // 报错：str is not defined
 ```
+
+## DOM
+文档对象模型，简称DOM，是一种与平台和语音无关的模型，用来表示HTML或XML文档。文档对象模型中定义了文档的逻辑结构，以及程序访问和操作文档的方式。当网页加载时，浏览器会自动创建当前页面的文档对象模型，如下：
+![image](/img/dom.png)
+
++ DOM对象中提供的属性
+
+属性|描述
+-|-:
+document.activeElement	     |返回当前获取焦点的元素
+document.anchors	         |返回对文档中所有 Anchor 对象的引用
+document.applets	         |返回对文档中所有 Applet 对象的引用。注意: HTML5 已不支持 <applet> 元素
+document.baseURI	         |返回文档的基础 URI
+document.body	             |返回文档的 body 元素
+document.cookie	             |设置或返回与当前文档有关的所有 cookie
+document.doctype	         |返回与文档相关的文档类型声明 (DTD)
+document.documentElement	 |返回文档的根节点
+document.documentMode	     |返回浏览器渲染文档的模式
+document.documentURI	     |设置或返回文档的位置
+document.domain	             |返回当前文档的域名
+document.domConfig	         |已废弃，返回 normalizeDocument() 被调用时所使用的配置
+document.embeds	             |返回文档中所有嵌入内容（embed）的集合
+document.forms	             |返回文档中所有 Form 对象的引用
+document.images	             |返回文档中所有 Image 对象的引用
+document.implementation	     |返回处理该文档的 DOMImplementation 对象
+document.inputEncoding	     |返回文档的编码方式
+document.lastModified	     |返回文档的最后修改日期
+document.links	             |返回对文档中所有 Area 和 Link 对象的引用
+document.readyState	         |返回文档状态（载入中）
+document.referrer	         |返回载入当前文档的 URL
+document.scripts	         |返回页面中所有脚本的集合
+document.strictErrorChecking |设置或返回是否强制进行错误检查
+document.title	             |返回当前文档的标题
+document.URL	             |返回文档的完整 URL
+                                                                                        	        
+
++ DOM对象中提供的方法
+
+方法|描述
+-|-:
+document.addEventListener()	      |向文档中添加事件
+document.adoptNode(node)	      |从另外一个文档返回 adapded 节点到当前文档
+document.close()	              |关闭使用 document.open() 方法打开的输出流，并显示选定的数据
+document.createAttribute()	      |为指定标签添加一个属性节点
+document.createComment()	      |创建一个注释节点
+document.createDocumentFragment() |创建空的 DocumentFragment 对象，并返回此对象
+document.createElement()	      |创建一个元素节点
+document.createTextNode()	      |创建一个文本节点
+document.getElementsByClassName() |返回文档中所有具有指定类名的元素集合
+document.getElementById()	      |返回文档中具有指定 id 属性的元素
+document.getElementsByName()	  |返回具有指定 name 属性的对象集合
+document.getElementsByTagName()	  |返回具有指定标签名的对象集合
+document.importNode()	          |把一个节点从另一个文档复制到该文档以便应用
+document.normalize()	          |删除空文本节点，并合并相邻的文本节点
+document.normalizeDocument()	  |删除空文本节点，并合并相邻的节点
+document.open()	                  |打开一个流，以收集来自 document.write() 或 document.writeln() 方法的输出
+document.querySelector()	      |返回文档中具有指定 CSS 选择器的第一个元素
+document.querySelectorAll()	      |返回文档中具有指定 CSS 选择器的所有元素
+document.removeEventListener()	  |移除文档中的事件句柄
+document.renameNode()	          |重命名元素或者属性节点
+document.write()	              |向文档中写入某些内容
+document.writeln()	              |等同于 write() 方法，不同的是 writeln() 方法会在末尾输出一个换行符
+               	      	                                       
+### element  
+
+使用 Document 对象中提供的方法（例如 getElementsByTagName()、getElementById()、getElementsByClassName() 等）可以得到 Element 对象，在 Element 对象中同样也提供了一系列方法和属性，来操作文档中的元素或者元素中的属性。
+
++ element对象中提供的属性
+
+属性|描述
+-|-:
+element.accessKey	           |设置或返回一个访问单选按钮的快捷键
+element.attributes	           |返回一个元素的属性数组
+element.childNodes	           |返回元素的一个子节点的数组
+element.children	           |返回元素中子元素的集合
+element.classList	           |返回元素中类名组成的对象
+element.className	           |设置或返回元素的 class 属性
+element.clientHeight	       |返回内容的可视高度（不包括边框，边距或滚动条）
+element.clientWidth	           |返回内容的可视宽度（不包括边框，边距或滚动条）
+element.contentEditable	       |设置或返回元素的内容是否可编辑
+element.dir	                   |设置或返回一个元素中的文本方向
+element.firstChild	           |返回元素中的第一个子元素
+element.id	                   |设置或者返回元素的 id
+element.innerHTML	           |设置或者返回元素的内容
+element.isContentEditable	   |返回元素内容是否可编辑，如果可编辑则返回 true，否则返回 false
+element.lang	               |设置或者返回一个元素的语言
+element.lastChild	           |返回元素的最后一个子元素
+element.namespaceURI	       |返回命名空间的 URI
+element.nextSibling	           |返回指定元素之后的兄弟元素，两个元素在 DOM 树中位于同一层级（包括文本节点、注释节点）
+element.nextElementSibling	   |返回指定元素之后的兄弟元素，两个元素在 DOM 树中位于同一层级（不包括文本节点、注释节点）
+element.nodeName	           |返回元素名称（大写）
+element.nodeType	           |返回元素的节点类型
+element.nodeValue	           |返回元素的节点值
+element.offsetHeight	       |返回元素的高度，包括边框和内边距，但不包括外边距
+element.offsetWidth	           |返回元素的宽度，包括边框和内边距，但不包括外边距
+element.offsetLeft	           |返回元素在水平方向的偏移量
+element.offsetParent	       |返回距离该元素最近的进行过定位的父元素
+element.offsetTop	           |返回元素在垂直方向的偏移量
+element.ownerDocument	       |返回元素的根元素（文档对象）
+element.parentNode	           |返回元素的父节点
+element.previousSibling	       |返回元素之前的兄弟元素，两个元素在 DOM 树中位于同一层级（包括文本节点、注释节点）
+element.previousElementSibling |返回元素之前的兄弟元素，两个元素在 DOM 树中位于同一层级（不包括文本节点、注释节点）
+element.scrollHeight	       |返回元素的完整高度（包括被滚动条隐蔽的部分）
+element.scrollLeft	           |设置或返回元素滚动条距离元素左侧的距离
+element.scrollTop	           |设置或返回元素滚动条距离元素上方的距离
+element.scrollWidth	           |返回元素的完整宽度（包括被滚动条隐蔽的部分）
+element.style	               |设置或返回元素的样式属性
+element.tabIndex	           |设置或返回元素的标签顺序
+element.tagName	               |以字符的形式返回元素的名称（大写）
+element.textContent	           |设置或返回某个元素以及其中的文本内容
+element.title	               |设置或返回元素的 title 属性
+element.length	               |返回对象的长度
+                                                            	                    
++ element对象中提供的方法
+
+方法|描述
+-|-:
+element.addEventListener()	     	           |为指定元素定义事件
+element.appendChild()	         	           |为元素添加一个新的子元素
+element.cloneNode()	             	           |克隆某个元素
+element.compareDocumentPosition()	           |比较当前元素与指定元素在文档中的位置，返回值有1,2,4,8,16,32
+element.focus()	                	           |使元素获得焦点
+element.getAttribute()	        	           |通过属性名称获取指定元素的属性值
+element.getAttributeNode()	    	           |通过属性名称获取指定元素得属性节点
+element.getElementsByTagName()		           |通过标签名获取当前元素下的所有子元素的集合
+element.getElementsByClassName()	           |通过类名获取当前元素下的子元素的集合
+element.hasAttribute()	        	           |判断元素是否具有指定的属性，若存在则返回 true，不存在则返回 false
+element.hasAttributes()	        	           |判断元素是否存在任何属性，若存在则返回 true，不存在则返回 false
+element.hasChildNodes()	        	           |判断一个元素是否具有子元素，有则返回 true，没有则返回 false
+element.hasFocus()	            	           |判断元素是否获得了焦点
+element.insertBefore()	        	           |在已有子元素之前插入一个新的子元素
+element.isDefaultNamespace()		           |如果指定 namespaceURI 是默认的则返回 true，否则返回 false。
+element.isEqualNode()	        	           |检查两个元素是否相等
+element.isSameNode()	        	           |检查当前元素与指定元素是否为同一元素
+element.isSupported()	        	           |判断当前元素是否支持某个特性
+element.normalize()	            	           |合并相邻的文本节点，并删除空的文本节点
+element.querySelector()	        	           |根据 CSS 选择器，返回第一个匹配的元素
+document.querySelectorAll()	    	           |根据 CSS 选择器，返回所有匹配的元素
+element.removeAttribute()	    	           |从元素中删除指定的属性
+element.removeAttributeNode()		           |从元素中删除指定的属性节点
+element.removeChild()	        	           |删除一个子元素
+element.removeEventListener()		           |移除由 addEventListener() 方法添加的事件
+element.replaceChild()	        	           |替换一个子元素
+element.setAttribute()	        	           |设置或者修改指定属性的值
+element.setAttributeNode()	    	           |设置或者修改指定的属性节点
+element.setUserData()	        	           |在元素中为指定键值关联对象
+element.toString()	            	           |将元素转换成字符串
+nodelist.item()	                	           |返回某个元素基于文档树的索引
+
+**特别解释说明**：
+    
+1：表示两个元素没有关系，不属于同一文档；
+
+2：表示当前元素在指定元素之后；
+
+4：当前元素在指定元素之前；
+
+8：当前元素在指定元素之内；
+
+16：指定元素在当前元素之内；
+
+32：两个元素没有关系，或者它们是同一元素的两个属性。
+
+### attributes 
+元素属性是指在HTML元素的开始标签中用来控制标签行为或提供标签信息的特殊词语。在 HTML DOM 中，通过 attributes 对象来表示 HTML 属性，在 attributes 对象中提供了多种添加、修改和删除 HTML 属性的方法，如下表所示：
+
+属性/方法|描述
+-|-:
+attributes.isId	         	|如果属性是 ID 类型，则返回 true，否则返回 false
+attributes.name	            |返回属性名称
+attributes.value	        |设置或者返回属性的值
+attributes.specified	    |如果定义了指定属性，则返回 true，否则返回 false
+nodemap.getNamedItem()	    |从节点列表中返回的指定属性节点
+nodemap.item()	            |返回节点列表中处于指定索引号的节点
+nodemap.length	            |返回节点列表的节点数目
+nodemap.removeNamedItem()   |删除指定属性节点
+nodemap.setNamedItem()	    |设置指定属性节点（通过名称）
+                     	   
