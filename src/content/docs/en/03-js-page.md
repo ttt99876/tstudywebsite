@@ -1571,6 +1571,355 @@ TypeError	    |类型错误，当使用的值不是预期类型时，会抛出�
 URIError	    |URI 错误，当使用 URI 相关函数但传入 URI 参数时，会抛出该错误
 ReferenceError  |参数错误，当尝试使用未定义的变量、函数、对象时，会抛出该错误
 
+## 表单验证
+使用js来验证提交数据（客户端验证）比将数据提交到服务器再进行验证（服务器端验证）用户体验更好，因为客户端验证发生在用户浏览器中，无需向服务器发送请求，所以速度更快，而服务器端验证，需要先将数据提交到服务器，然后服务器再将结果返回给浏览器，用户需要等待服务器响应结果才能知道哪里出了问题。
+
+**使用js进行表单验证**
+
++ 必填字段验证：确保必填字段都被填写
+
++ 数据格式验证：确保所填内容的类型和格式都是正确的、有效的
+
+**必填字段验证**
+
+必填字段验证在用户注册时比较常见，通过必填字段验证，能够确保表单中的必填字段都被填写，例如用户名、密码、邮箱等。
+
+实现必填字段验证非常简单，只需要通过程序来检查必填表单元素的值是否为空即可
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+    <style>
+        .error{
+            color: red;
+        }
+        label{
+            display: inline-block;
+            width: 70px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <form onsubmit="return validateForm()" action="" method="post">
+        <fieldset>
+            <legend>注册:</legend>
+            <div class="row">
+                <label>用户名：</label>
+                <input type="text" name="name">
+                <span class="error" id="nameErr"></span>
+            </div>
+            <div class="row">
+                <label>密码：</label>
+                <input type="password" name="pwd">
+                <span class="error" id="pwdErr"></span>
+            </div>
+            <div class="row">
+                <label>Email：</label>
+                <input type="text" name="email">
+                <span class="error" id="emailErr"></span>
+            </div>
+            <div class="row">
+                <label>手机号：</label>
+                <input type="text" name="mobile" maxlength="11">
+                <span class="error" id="mobileErr"></span>
+            </div>
+            <div class="row">
+                <label>验证码：</label>
+                <input type="text" name="captcha" maxlength="4"><span id="captcha" onclick="getCaptcha()"></span>
+                <span class="error" id="captchaErr"></span>
+            </div>
+            <div class="row">
+                <input type="submit" value="注册">
+            </div>
+        </fieldset>
+    </form>
+    <script>
+        var captcha = getCaptcha(); // 生成验证码
+        // 清空 input 标签后的提示信息
+        var tags = document.getElementsByTagName('input');
+        for (var i = 0; i < tags.length; i++) {
+            tags[i].onchange = function(){
+                var idname = this.name + "Err";
+                document.getElementById(idname).innerHTML = '';
+            }
+        }
+        // 显示错误消息
+        function printError(elemId, hintMsg) {
+            document.getElementById(elemId).innerHTML = hintMsg;
+        }
+        // 验证表单数据
+        function validateForm() {
+            // 获取表单元素的值
+            var name = document.querySelector("input[name='name']").value;
+            var pwd = document.querySelector("input[name='pwd']").value;
+            var email = document.querySelector("input[name='email']").value;
+            var mobile = document.querySelector("input[name='mobile']").value;
+            var captcha = document.querySelector("input[name='captcha']").value;
+                  
+            if(name == "" || name == null){
+                printError("nameErr", "用户名不能为空");
+                return false;
+            }
+            if(pwd == "" || pwd == null){
+                printError("pwdErr", "密码不能为空");
+                return false;
+            }
+            if(email == "" || email == null){
+                printError("emailErr", "邮箱不能为空");
+                return false;
+            }
+            if(mobile == "" || mobile == null){
+                printError("mobileErr", "手机号不能为空");
+                return false;
+            }
+            if(captcha == "" || captcha == null){
+                printError("captchaErr", "验证码不能为空");
+                return false;
+            }
+        }
+        // 获取验证码
+        function getCaptcha(){
+            var cap = Math.floor(Math.random()*10000).toString();
+            if(cap.length != 4) cap += "0";
+            captcha = cap;
+            document.getElementById("captcha").innerHTML = cap;
+        }
+    </script>
+</body>
+</html>
+```
+
+**数据格式验证**
+
+数据格式验证就是通过正则表达式来验证用户所填的数据，是否符合要求，以邮箱地址为例，正确的邮箱地址中要包含一个@和一个. ，而且@不能是邮箱地址的第一个字符， .要出现在@之后
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+    <style>
+        .error{
+            color: red;
+        }
+        label{
+            display: inline-block;
+            width: 70px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <form onsubmit="return validateForm()" action="" method="post">
+        <fieldset>
+            <legend>注册:</legend>
+            <div class="row">
+                <label>用户名：</label>
+                <input type="text" name="name">
+                <span class="error" id="nameErr"></span>
+            </div>
+            <div class="row">
+                <label>密码：</label>
+                <input type="password" name="pwd">
+                <span class="error" id="pwdErr"></span>
+            </div>
+            <div class="row">
+                <label>Email：</label>
+                <input type="text" name="email">
+                <span class="error" id="emailErr"></span>
+            </div>
+            <div class="row">
+                <label>手机号：</label>
+                <input type="text" name="mobile" maxlength="11">
+                <span class="error" id="mobileErr"></span>
+            </div>
+            <div class="row">
+                <label>验证码：</label>
+                <input type="text" name="captcha" maxlength="4"><span id="captcha" onclick="getCaptcha()"></span>
+                <span class="error" id="captchaErr"></span>
+            </div>
+            <div class="row">
+                <input type="submit" value="注册">
+            </div>
+        </fieldset>
+    </form>
+    <script>
+        var capCode = getCaptcha(); // 生成验证码
+        console.log(capCode);
+        // 清空 input 标签后的提示信息
+        var tags = document.getElementsByTagName('input');
+        for (var i = 0; i < tags.length; i++) {
+            tags[i].onchange = function(){
+                var idname = this.name + "Err";
+                document.getElementById(idname).innerHTML = '';
+            }
+        }
+        // 显示错误消息
+        function printError(elemId, hintMsg) {
+            document.getElementById(elemId).innerHTML = hintMsg;
+        }
+        // 验证表单数据
+        function validateForm() {
+            // 获取表单元素的值
+            var name = document.querySelector("input[name='name']").value;
+            var pwd = document.querySelector("input[name='pwd']").value;
+            var email = document.querySelector("input[name='email']").value;
+            var mobile = document.querySelector("input[name='mobile']").value;
+            var captcha = document.querySelector("input[name='captcha']").value;
+                  
+            if(name == "" || name == null){
+                printError("nameErr", "用户名不能为空");
+                return false;
+            }
+            if(pwd == "" || pwd == null){
+                printError("pwdErr", "密码不能为空");
+                return false;
+            }
+            if(email == "" || email == null){
+                printError("emailErr", "邮箱不能为空");
+                return false;
+            } else {
+                var regex = /^\S+@\S+\.\S+$/;
+                if(regex.test(email) === false) {
+                    printError("emailErr", "请输入正确的邮箱地址");
+                    return false;
+                }
+            }
+            if(mobile == "" || mobile == null){
+                printError("mobileErr", "手机号不能为空");
+                return false;
+            } else {
+                var regex = /^[1]\d{10}$/;
+                if(regex.test(mobile) === false) {
+                    printError("mobileErr", "您输入的手机号码有误");
+                    return false;
+                }
+            }
+            if(captcha == "" || captcha == null){
+                printError("captchaErr", "验证码不能为空");
+                return false;
+            } else {
+                console.log(capCode);
+                console.log(captcha);
+                if(capCode != captcha){
+                    printError("captchaErr", "验证码有误");
+                    return false;
+                }
+            }
+        }
+        // 获取验证码
+        function getCaptcha(){
+            var cap = Math.floor(Math.random()*10000).toString();
+            if(cap.length != 4) cap += "0";
+            document.getElementById("captcha").innerHTML = cap;
+            return capCode = cap;
+        }
+    </script>
+</body>
+</html>
+```
+
+## js动画效果的实现
+js动画主要是通过修改元素的样式来实现的，能够实许多css动画所不能实现的效果，例如暂停、回放等，一般常见的有轮播图的实现
+
+与css动画相比，js动画具有以下特点：
+
++ js动画控制能力更强，可以在动画播放过程中对动画进行控制，例如开始、暂停、回放、终止、取消等
+
++ js动画的效果比css动画更丰富，比如曲线运动，冲击闪烁，视差滚动等效果，只有js动画才能完成
+
++ css动画有兼容性问题，而js大多时候没有兼容性问题
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+    <style type="text/css">
+        * {
+            margin: 0 auto;
+            padding: 0;
+        }
+        ul {
+            list-style: none;
+        }
+        #view {
+            position: relative;
+            width: 320px;
+            height: 120px;
+            border: 10px solid #bc8f8f;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        #img_list {
+            position: absolute;
+            width: 960px;
+        }
+        #img_list li {
+            float: left;
+            width: 320px;
+            height: 120px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="view">
+        <ul id="img_list">
+            <li style="background-color: #87ceeb;"></li>
+            <li style="background-color: #ff69b4;"></li>
+            <li style="background-color: #98fb98;"></li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        var img_list = document.getElementById('img_list');
+
+        setInterval(function() {
+            for (var i = 0; i <= 100; i++) {
+                (function(pos) {
+                    setTimeout(function() {
+                        img_list.style.left = - (pos / 100) * 320 + 'px';
+                    }, (pos + 1) * 10)
+                })(i)
+            }
+
+            var current = img_list.children[0];
+            setTimeout(function() {
+                img_list.appendChild(current);
+                img_list.style.left = '0px';
+            }, 1100);
+        }, 2000);
+    </script>
+</body>
+</html>
+```
+## 调试
+调试是程序开发中必不可少的一个环节，熟练掌握各种调试技巧，能在我们的工作中起到事半功倍的效果
+
+### 控制台
+能够显示代码中的语法错误和运行时错误，其中包括错误类型、错误描述以及错误出现的位置。快捷键f12
+![image](/img/控制台.png)
+需要注意，控制台提供的错误信息不一定百分之百正确，因为某些错误可能是由于另外一个错误直接或间接引起的
+### 断点调试
+断点是浏览器内置调试工具的重要功能之一，通过设置断点可以让程序在我们需要的地方中断，从而方便我们对该处代码进行分析和逻辑处理
+![image](/img/断点调试.png)
+
+1. 控制台中操作
+
++ 找到要调试的文件
+
++ 打断点
+
++ 断点调试
+
++ 逐语句执行
+
+2. 代码中添加debugger操作，运行操作时会自动到断点位置
+
 
    
 	
