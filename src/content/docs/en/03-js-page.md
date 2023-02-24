@@ -1920,8 +1920,309 @@ js动画主要是通过修改元素的样式来实现的，能够实许多css动
 
 2. 代码中添加debugger操作，运行操作时会自动到断点位置
 
+## 闭包
+是js语音的一个难点，也是它的特色，很多高级应用都是依靠闭包实现的。闭包与变量的作用域以及变量的生命周期密切相关。闭包是指一个函数，当两个函数彼此嵌套时，内部的函数就是闭包
 
+在Js中，函数属于对象，对象又属于属性的集合，而属性的值又可以是对象，所以可以在函数内部再定义函数，如函数A中定义了函数B，然后在函数外部调用函数B，这个过程就是闭包
+
+用途：需要在函数中定义一些变量，并且希望这些变量能够一直保存在内存中，同时不影响函数外的全局变量时，就用闭包
+
+闭包形成的条件是内部函数需要通过外部函数return给返回出来
+```js
+// funOne就是闭包
+function funOne(){    // 外部函数
+    var num = 0;      // 局部变量
+    function funTwo(){   // 内部函数
+        num++;                 
+        return num;
+    }
+    return funTwo;
+}
+var fun = funOne();             // 返回函数 funTwo
+```
+
+在实际开发中，我们经常使用闭包与匿名函数结合起来使用,闭包函数彼此之间没有联系，都是独立的
+
+```js
+var funOne =(function (){
+    var num = 0;
+    return function (){
+        num++;
+        return num;
+    }
+})()
+console.log(funOne());//1
+console.log(funOne());//2
+```
+
+### 垃圾回收机制（GC）
+如果一个对象不再被引用，这个对象就会被GC回收，否则这个对象会一直保存在内存中
+```js
+function funOne(){
+    var num = 0;
+    function funTwo(){
+        num++;
+        console.log(num);
+    }
+    return funTwo;
+}
+var fun = funOne();
+fun();      // 输出：1
+fun();      // 输出：2
+fun();      // 输出：3
+fun();      // 输出：4
+```
+在这段程序中，内部函数funTwo()定义在外部函数funOne()中，因此funTwo()依赖funOne()，而全局变量fun又引用了funTwo()，所以funOne()间接的被fun引用。因此funOne()不会被GC回收，会一直保存在内存中
+
+num是外部函数funOne()中的一个变量，它的值在内部函数funTwo()中被修改，函数funTwo()每执行一次就会将num加1，根据闭包的特点，函数funOne()中的变量num会一直保存在内存中
+
+## 严格模式use strict
+在ES5中引入的，在严格模式下，js对语法的要求会更加严格，一些在正常模式下能够运行的代码，在严格模式下将不能运行。目前ie10及其之后的版本都已支持严格模式，js正向着更合理、更安全、更严谨的方向发展
+
+**添加严格模式的目的如下**：
+
++ 消除js语法中一些不合理、不严谨的地方
+
++ 消除代码中一些不安全的地方，保证代码饿安全运行
+
++ 提高js程序的运行效率
+
++ 为以后新版本的js做好铺垫
+
+**使用严格模式**：
+在js脚本的开头添加"use strict"指令。只有在整个脚本第一行或者函数第一行时才能被识别，除了 IE9 以及更低的版本外，所有的浏览器都支持该指令。
+```js
+ <script>
+        "use strict";
+        x = 'http://c.binacheng.net/'; // 此处报错：Uncaught ReferenceError: x is not defined at index.html:11
+        console.log(x);
+    </script>
+```
+
+**严格模式中的变化**：
+
+1. 不允许使用未声明的变量
+```js
+"use strict";
+v = 1;        // 此处报错：Uncaught ReferenceError: v is not defined
+for(i = 0; i < 2; i++) { // 此处报错：Uncaught ReferenceError: i is not defined
+}
+```
+
+2. 不允许删除变量或函数
+```js
+"use strict";
+var person = {name: "Peter", age: 28};
+delete person;  // 此处报错：Uncaught SyntaxError: Delete of an unqualified identifier in strict mode.
+function sum(a, b) {
+    return a + b;
+}
+delete sum;  // 此处报错：Uncaught SyntaxError: Delete of an unqualified identifier in strict mode.
+```
+
+3. 函数中不允许有同名的参数
+```js
+"use strict";
+function square(a, a) {     // 此处报错：Uncaught SyntaxError: Duplicate parameter name not allowed in this context
+    return a * a;
+}
+```
+
+4. eval语句的作用域是独立的
+```js
+"use strict";
+// 普通模式下，eval 语句的作用域取决于它所在的位置，而在严格模式下，eval 语句本身就是一个局部作用域，通过 eval 语句生成的变量只能在 eval 语句内使用。
+eval("var x = 5; console.log(x);");
+console.log(x);     // 此处报错：Uncaught ReferenceError: x is not defined
+```
+
+5. 不允许使用with语句
+```js
+"use strict";
+var radius1 = 5;
+var area1 = Math.PI * radius1 * radius1;
+var radius2 = 5;
+with(Math) {        // 此处报错：Uncaught SyntaxError: Strict mode code may not include a with statement
+    var area2 = PI * radius2 * radius2;
+}
+```
+
+6. 不允许写入只读属性
+```js
+"use strict";
+var person = {name: "Peter", age: 28};
+Object.defineProperty(person, "gender", {value: "male", writable: false});
+person.gender = "female"; // 此处报错：Uncaught TypeError: Cannot assign to read only property 'gender' of object '#<Object>'
+```
+
+7. 不允许使用八进制数
+```js
+"use strict";
+var x = 010; // 此处报错：Uncaught SyntaxError: Octal literals are not allowed in strict mode.
+console.log(parseInt(x));
+```
+
+8. 不能在If语句中声明函数
+```js
+"use strict";
+//如果在if语句中声明函数，则会产生语法错误
+if (true) {
+    function demo() { // 此处报错：Uncaught ReferenceError: demo is not defined
+        console.log("http://c.biancheng.net/");
+    }
+}
+demo();
+```
+
+9. 禁止使用this表示全局对象
+```js
+"use strict";
+var name = "http://c.biancheng.net/";
+function demoTest() {
+    console.log(this); 
+}
+demoTest();
+```
+## js解析JSON
+
+1. 定义
+
+用来存储和传输数据，通常服务器端与客户端在进行交互时就是使用JSON格式的数据，是基于文本的格式，文件扩展名为.json。有两种基本结构：
+
+对象：由若干键/值对（key:value）组成的无序集合，每个对象以{}包裹，键值对之间用逗号分隔
+
+数组：一个有序的值列表，每个数组一[]包裹，多个值之间使用逗号分隔  
+
+2. 如何解析json数据
+
+通过 JSON.parse() 方法来解析 JSON 数据
+
+3. json数据中的对象和数组可以相互嵌套，一个json对象中可以包含任意类型的数据
+
+4. 将数据转换为json
+
+通过JSON.stringify方法来转换，方便客户端与服务器端进行数据交互
+
+## cookie的设置、获取和删除
+cookie代表一种小型的文本文件，可以让开发人员在用户计算机上存储少量的数据（大约4kb），来记录用户的某些信息，如用户身份、喜好等，当用户下次访问网站时，网站可以通过检索这些信息来为用户展示个性化页面
+
+### 设置cookie
+
+可以通过document.cookie属性来创建、读取、修改和删除 Cookie 信息
+
+1. name=value形式
+
+设置新的cookie信息，需要以name=value形式的字符串来定义新的cookie信息
+```js
+// 会发现 Cookie 并没有创建，这是因为 Cookie 是用来与服务器进行交互的，所以要成功创建 Cookie 需要借助服务器环境。您可以阅读《PHP开发环境》一节，来搭建一个简单的开发环境，
+document.cookie = "url=http://c...";
+```
+2. max-age属性
+
+cookie并不会一直存在，默认情况下，cookie的生命周期就是浏览器的会话周期，即用户关闭浏览器后，cookie就会失效。如果想要延长coolie的生命周期，可以使用max-age属性来指定cookie存在的时间（单位为秒），默认为-1，即关闭浏览器后失效。
+```js
+// max-age= -1            为负数,则表示该cookie为临时cookie，关闭浏览器后就会失效
+// max-age= 0             为0，则表示删除该cookie
+// max-age= 30*24*60*60   设置为30天
+document.cookie = "url=http://c.biancheng.net/; max-age=" + 30*24*60*60;
+```
+
+3. expires
+
+```js
+// 使用expires属性来指定cookie失效的具体日期（GMT/UTC格式）
+document.cookie = "url=http://c.biancheng.net/; expires=Sun, 31 Dec 2017 12:00:00 UTC;";
+```
+4. path属性
+
+默认情况下，cookie可用于统一域名下的所有网页，如果为cookie设置了path属性，cookie就只能在该域名指定路径下的网页中使用
+```js
+// 网站的域名为c.biancheng.net，若path属性设置为/，则表示cookie可在域名下的所有网页中使用；若path属性设置为/javascript/，则cookie只可在 http://c.biancheng.net/javascript/ 下的网页中使用
+document.cookie = "url=http://c.biancheng.net/; path=/";
+```
+
+5. domain 属性
+```js
+// 希望 Cookie 可以在指定域名下的子域名中使用，则可以通过 domain 属性来设置，默认情况下，Cookie 仅可在设置它的域名下使用
+document.cookie = "url=http://c.biancheng.net/; path=/; domain=.biancheng.net";
+```
+
+6. secure属性
+
+该属性只有一个属性名，没有属性值，如果设置了该属性，则表示cookie将仅通过https协议传输
+```js
+document.cookie = "url=http://c.biancheng.net/; path=/; domain=.biancheng.net; secure";
+```
+
+7. 通常将cookie的设置封装为一个函数
+```js
+/**
+* 添加 Cookie
+* @param {[string]} name       [Cookie 的名称]
+* @param {[string]} value      [Cookie 的值]
+* @param {[number]} daysToLive [Cookie 的过期时间]
+*/
+function setCookie(name, value, daysToLive) {
+    // 对 cookie 值进行编码以转义其中的分号、逗号和空格
+    var cookie = name + "=" + encodeURIComponent(value);
    
+    if(typeof daysToLive === "number") {
+        /* 设置 max-age 属性 */
+        cookie += "; max-age=" + (daysToLive*24*60*60);
+    }
+    document.cookie = cookie;
+}
+```
+
+### 获取cookie
+
+读取cookie同样使用document.cookie即可，该属性会返回一个字符串，字符串中包含除max-age、expires、path 和 domain 等属性之外的所有 Cookie 信息，
+为了获取单个 Cookie 的值，我们可以通过 split() 函数将包含 Cookie 信息的字符串拆分为数组，然后再获取某个 Cookie 的值
+```js
+document.cookie = "url=http://c.biancheng.net/; max-age=" + 30*24*60*60;
+document.cookie = "course=JavaScript";
+document.cookie = "title=cookie";       
+function getCookie(name) {
+    // 拆分 cookie 字符串
+    var cookieArr = document.cookie.split(";");
+   
+    // 循环遍历数组元素
+    for(var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+       
+        /* 删除 cookie 名称开头的空白并将其与给定字符串进行比较 */
+        if(name == cookiePair[0].trim()) {
+            // 解码cookie值并返回
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    // 如果未找到，则返回null
+    return null;
+}
+document.write("url = " + getCookie("url") + "<br>");           // 输出：url = http://c.biancheng.net/
+document.write("course = " + getCookie("course") + "<br>");     // 输出：course = JavaScript
+document.write("title = " + getCookie("title"));                // 输出：title = cookie
+```
+
+### 修改或更新cookie的值
+删除或修改cookie值的唯一方法就是创建一个同名额度cookie，来替换要修改的cookie，若要修改的cookie定义path属性，在修改该属性时也要定义相同的path属性，否则会创建一个新的cookie
+```js
+// 创建一个 Cookie
+document.cookie = "url=http://c.biancheng.net/; path=/; max-age=" + 30*24*60*60;
+// 修改这个 Cookie
+document.cookie = "url=http://c.biancheng.net/javascript/; path=/; max-age=" + 365*24*60*60;
+```
+
+### 删除cookie
+删除cookie与修改cookie类似，只需要重新将cookie的值设置为空，并将expires属性设置为一个过去的日期即可
+```js
+// 创建一个 Cookie
+document.cookie = "url=http://c.biancheng.net/; path=/; max-age=" + 30*24*60*60;
+// 删除这个 Cookie
+document.cookie = "url=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+```
+
+
 	
 	
 	
