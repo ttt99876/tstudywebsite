@@ -1099,6 +1099,85 @@ onsubmit |当提交表单时触发此事件
 </body>
 </html>
 ``` 
+## 事件冒泡和事件捕获
+**事件流**：事情发生的顺序
+1. 事件冒泡
+
+发生在父子组件嵌套中，当在子元素上触发事件的时候，会导致父元素的事件也被触发，即从最内存到最外层，直到document对象
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+    <style type="text/css">
+        div, p, a {
+            padding: 15px 30px;
+            display: block;
+            border: 2px solid #000;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div onclick="alert('事件冒泡: ' + this.tagName)">DIV
+        <p onclick="alert('事件冒泡: ' + this.tagName)">P
+            <a href="#" onclick="alert('事件冒泡: ' + this.tagName)">A</a>
+        </p>
+    </div>
+</body>
+</html>
+```
+
+2. 事件捕获
+
+与事件冒泡相反，事件会从最外层开始发生，直到具体的元素
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript</title>
+    <style type="text/css">
+        div, p, a {
+            padding: 15px 30px;
+            display: block;
+            border: 2px solid #000;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">DIV
+        <p class="hint">P
+            <a href="#">A</a>
+        </p>
+    </div>
+    <script>
+        function showTagName() {
+            alert("事件捕获: " + this.tagName);
+        }
+        var elems = document.querySelectorAll("div, p, a");
+        for (let elem of elems) {
+            elem.addEventListener("click", showTagName, true);
+        }
+    </script>
+</body>
+</html>
+```
+
+3. 阻止事件捕获和冒泡
+
+通过event.stopPropagation() 方法来阻止事件捕获和事件冒泡的发生。stopPropagation() 会阻止事件捕获和事件冒泡，但是无法阻止标签的默认行为，例如点击链接任然可以打开对应网页。
+
+使用 event.stopImmediatePropagation() 方法来阻止同一节点的同一事件的其它事件处理程序，例如为某个节点定义了多个点击事件，当事件触发时，这些事件会按定义顺序依次执行，如果其中一个事件处理程序中使用了 stopImmediatePropagation() 方法，那么剩下的事件处理程序将不再执行。
+
+4. 阻止默认操作
+
+某些事件具有与之关联的默认操作，例如当您单击某个链接时，会自动跳转到指定的页面，当您单击提交按钮时，会将数据提交到服务器等。如果不想这样的默认操作发生，可以使用 event.preventDefault() 方法来阻止。注意：IE9 及以下的版本不支持 preventDefault() 方法，对于 IE9 及以下的浏览器您可以使用 event.returnValue = false;。
+
+
+## 事件委托
 
 ## 作用域
 可以在任意位置声明变量，但在不同的位置会影响变量的可用范围，这个范围称为作用域，有两种作用域：全局作用域和局部作用域
@@ -2221,6 +2300,80 @@ document.cookie = "url=http://c.biancheng.net/; path=/; max-age=" + 30*24*60*60;
 // 删除这个 Cookie
 document.cookie = "url=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 ```
+
+## ajax请求
+通过ajax可以异步从服务器请求数据并将数据更新到网页中，整个过程不需要重载（刷新）整个网页，可以将网页的内容更快的呈现给用户
+
+**异步**：当程序执行到ajax代码时，将ajax代码交给另外一个线程来执行，不论执行结果如何，当前线程会继续向下执行
+
+1. 工作原理
+
+需要使用浏览器内置的XMLHttpRequest对象向服务器发送HTTP请求，并接受服务器响应的数据。发起请求后会继续向下执行，直至结束
+![image](/img/ajax工作原理图.png)
+2. 发送ajax请求
+```js
+// 实例化一个XMLHttpRequest 对象
+var request = new XMLHttpRequest();
+// 使用 XMLHttpRequest 对象的 open() 方法来初始化一个请求
+/*
+参数说明如下：
+    method：请求的类型（使用的 HTTP 方法），例如 GET、POST、PUT、HEAD、DELETE 等；
+    url：请求的地址；
+    async：可选参数，布尔类型，表示是否请求是否异步执行，默认值为 true；
+    user：可选参数，表示用户名，主要用来认证，默认值为 null；
+    password：可选参数，表示密码，同样用来认证，默认值为 null。
+*/
+XMLHttpRequest.open(method, url, async, user, password);
+request.open('GET', 'test.php');
+// 使用 XMLHttpRequest 对象的 send() 方法将请求发送到服务器
+XMLHttpRequest.send(body)
+```
+
+3. 检索响应信息
+
+请求发送成功后，可以通过检索XMLHttpRequest对象来获取服务器的响应信息，XMLHttpRequest对象中有许多与响应有关的属性
+
++ XMLHttpRequest.readyState：一个无符号整型数字，表示请求的状态码，取值如下所示：
+
+```js
+0：未初始化，尚未调用 open() 方法；
+
+1：启动，已调用 open() 方法，但尚未调用 send() 方法；
+
+2：发送，已调用 send() 方法，但尚未接收到响应；
+
+3：接收，已接收到部分响应数据，但尚未完成；
+
+4：完成，已接收到全部响应数据，可以在客户端使用了。
+```
+
++ XMLHttpRequest.onreadystatechange：指定一个函数（回调函数），当 readyState  的值发生改变时，就会调用这个函数；
+
++ XMLHttpRequest.responseText：请求的响应信息，如果请求未成功或尚未发送请求，则为 null；
+
++ XMLHttpRequest.responseType：一个枚举值，用于指定响应中包含的数据类型；
+
++ XMLHttpRequest.responseURL：返回响应的序列化 URL（与请求的 URL 相同），如果 URL 为空则返回空字符串；
+
++ XMLHttpRequest.responseXML：返回一个包含 HTML 或 XML 的 Document 对象，若请求未成功、未发送或响应数据无法解析为 XML 或 HTML 则返回 null；
+
++ XMLHttpRequest.status：一个无符号整型数字，表示请求的响应状态码，常见的响应状态码如下所示：
+
+```js
+200：请求成功，服务器成功处理了请求；
+
+404：请求失败，服务器未找到请求的页面；
+
+500：服务器暂时不可用。
+```
+
++ XMLHttpRequest.statusText：一个字符串，表示响应状态的文本信息，例如“OK”或“Not Found”；
+
++ XMLHttpRequest.timeout：一个无符号整型数字，表示请求的超时时间，单位为毫秒，若超过该时间，请求会自动终止，默认值为 0，表示没有超时时间；
+
++ XMLHttpRequest.upload：返回一个 XMLHttpRequestUpload 对象，用来表示上传的进度。
+
+
 
 
 	
