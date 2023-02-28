@@ -45,7 +45,8 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'ts', link: 'en/06-ts-page' },
 		],
 		'后端': [
-			{ text: 'java', link: 'en/11-java-page' },
+			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
+			{ text: 'java入门（基本语法）', link: 'en/11-java01-page' },
 			
 			{ text: 'spring-boot', link: 'en/12-spring-boot-page' },
 			{ text: 'py', link: 'en/13-py-page' },

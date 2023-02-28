@@ -394,7 +394,7 @@ while(条件表达式){
 }
 ```
 while循环在每次循环之前，会先对条件表达式进行求值，如果条件表达式结果为true，则执行{}中的代码，如果条件表达式的结果为false，则退出while循环，执行while循环之后的代码
-![image](/img/while.png)
+![image](/img/js/while.png)
 ```js
 // 球1-100之间所有和
 var i =1;
@@ -415,7 +415,7 @@ do{
     // 需要执行的代码
 }while(条件表达式)
 ```
-![image](/img/do-while.png)
+![image](/img/js/do-while.png)
 ```js
 // 计算1-100之间的和
 var i = 1;
@@ -1213,7 +1213,7 @@ document.write(str);        // 报错：str is not defined
 
 ## DOM
 文档对象模型，简称DOM，是一种与平台和语音无关的模型，用来表示HTML或XML文档。文档对象模型中定义了文档的逻辑结构，以及程序访问和操作文档的方式。当网页加载时，浏览器会自动创建当前页面的文档对象模型，如下：
-![image](/img/dom.png)
+![image](/img/js/dom.png)
 
 + DOM对象中提供的属性
 
@@ -1981,11 +1981,11 @@ js动画主要是通过修改元素的样式来实现的，能够实许多css动
 
 ### 控制台
 能够显示代码中的语法错误和运行时错误，其中包括错误类型、错误描述以及错误出现的位置。快捷键f12
-![image](/img/控制台.png)
+![image](/img/js/控制台.png)
 需要注意，控制台提供的错误信息不一定百分之百正确，因为某些错误可能是由于另外一个错误直接或间接引起的
 ### 断点调试
 断点是浏览器内置调试工具的重要功能之一，通过设置断点可以让程序在我们需要的地方中断，从而方便我们对该处代码进行分析和逻辑处理
-![image](/img/断点调试.png)
+![image](/img/js/断点调试.png)
 
 1. 控制台中操作
 
@@ -2309,7 +2309,7 @@ document.cookie = "url=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 1. 工作原理
 
 需要使用浏览器内置的XMLHttpRequest对象向服务器发送HTTP请求，并接受服务器响应的数据。发起请求后会继续向下执行，直至结束
-![image](/img/ajax工作原理图.png)
+![image](/img/js/ajax工作原理图.png)
 2. 发送ajax请求
 ```js
 // 实例化一个XMLHttpRequest 对象
