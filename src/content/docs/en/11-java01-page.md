@@ -224,13 +224,13 @@ void arraycopy(Object src,int srcPos,Object dest,int destPos,int length);
 for(数据类型 变量名:数组名)
 ```java
 public class ForeachDemo {
-        public static void main(String[] args){
+   public static void main(String[] args){
 	int[] a = {5,7,20}
 	System.out.println(“数组a中的元素是：”);
 	for(int e:a){
 		 System.out.println(e);
 	}
-        }
+   }
 }
 //等价
 for(int int i=0;i<a.length;i++){

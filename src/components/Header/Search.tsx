@@ -15,22 +15,28 @@ const useDocSearchKeyboardEvents =
 	(docSearchReact as any).default.useDocSearchKeyboardEvents;
 
 export default function Search() {
+	// 是否展示搜索弹框
 	const [isOpen, setIsOpen] = useState(false);
+	//
 	const searchButtonRef = useRef<HTMLButtonElement>(null);
+	// 输入框中的初始值
 	const [initialQuery, setInitialQuery] = useState('');
-
+	// 点击搜索出现弹框
 	const onOpen = useCallback(() => {
+		// 弹框
 		setIsOpen(true);
 	}, [setIsOpen]);
-
+	// 点击其他关闭弹窗
 	const onClose = useCallback(() => {
+		// 关闭弹窗
 		setIsOpen(false);
 	}, [setIsOpen]);
-
+	// 在输入框中输入内容
 	const onInput = useCallback(
 		(e) => {
 			setIsOpen(true);
 			setInitialQuery(e.key);
+			// 搜索后面的逻辑需要在这里添加。有后台数据的情况请求后台，没有的情况需要自己查找全部文档，然后再过滤
 		},
 		[setIsOpen, setInitialQuery]
 	);
