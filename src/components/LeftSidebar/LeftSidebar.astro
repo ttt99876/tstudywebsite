@@ -11,10 +11,8 @@ const currentPageMatch = currentPage.endsWith('/')
 	? currentPage.slice(1, -1)
 	: currentPage.slice(1);
 const langCode = getLanguageFromURL(currentPage);
-console.log(langCode);
 
 const sidebar = SIDEBAR[langCode];
-console.log(sidebar);
 
 ---
 
