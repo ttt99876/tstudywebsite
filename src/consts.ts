@@ -53,9 +53,9 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'spring-boot', link: 'en/13-spring-boot-page' },
 			{ text: 'py', link: 'en/13-py-page' },
 		],
-		'其他': [
-			{ text: '子导航1', link: 'en/page-5' },
-			{ text: '子导航1', link: 'en/page-5' },
+		'docker': [
+			{ text: 'docker安装和使用', link: 'en/20-docker-install-page' },
+			{ text: 'docker安装mysql并使用', link: 'en/21-docker-mysql-page' },
 		],
 	},
 };
