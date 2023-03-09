@@ -16,7 +16,8 @@ description: "数据库中的相关知识"
 ## 二、MySql数据库软件
 
 ### （一）安装
-在官网中下载，然后安装（若安装不成功，需要严格卸载，否则下次安装不成功，每个版本的安装步骤大同小异）
+官网8.0教程  https://dev.mysql.com/doc/refman/8.0/en/tutorial.html
+，下载然后安装（若安装不成功，需要严格卸载，否则下次安装不成功，每个版本的安装步骤大同小异）
 
 个人喜欢下载docker,在docker中下载镜像mysql。因为mysql卸载特别不友好，会卸载不干净
 
@@ -325,6 +326,9 @@ drop table if exists 表名;
 ![image](/img/java/DB/DDL之删除表.png)
 
 #### 3、对表进行增删改操作  ------DML
+
+这里是使用频率最频繁的地方，通常是。
+
         （1）添加数据
 
 ```js
@@ -520,9 +524,9 @@ select * from stu1 order by math asc,english asc;
 
 
         **聚合函数**：
+
 ```js
 /*
-group by:
     count：统计记录数
     sum：求和，多个记录求和
     avg：平均数
@@ -533,14 +537,42 @@ group by:
 select count(*) 条数 from stu1 ;
 //  英语不为空的记录
 select count(english)  from stu1 ;
+//  英语平均值
+select avg(english)  from stu1 ;
+//  英语平最大值
+select max(english)  from stu1 ;
+//  英语平最小值
+select min(english)  from stu1 ;
+//  英语总和
+select sum(english)  from stu1 ;
 ```
-![image](/img/java/DB/DQL排序.png)
+
++ 聚合函数的操作会自动排除null的记录，然而实际上，null的也要被计算到里面，可以利用  ifnull(为null,0)  或者  选用非空的列（主键）
+```js
+select count(ifnull(english,0))  from stu1 ;
+```
 
         **分组**：
+```js
+/*
+ group by:
+*/
+//  查询表中男，女的数学成绩平均分  即男总分/男个数  女总分/女个数
+select sex ,avg(math) from stu1 GROUP BY sex ;
+
+//  查询表中男，女的人数  
+select sex ,count(ifnull(sex,0)) from stu1 GROUP BY sex ;
+
+//  查询表中男，女的数学成绩平均分 和 人数  
+select sex ,avg(math) 平均分,count(ifnull(sex,0)) 人数 from stu1 GROUP BY sex ;
+```
+![image](/img/java/DB/DQL分组查询.png)
 
         **分页**：
 
         **多表操作**：
+
+
 
 
 
