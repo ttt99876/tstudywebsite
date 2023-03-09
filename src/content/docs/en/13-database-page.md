@@ -64,7 +64,7 @@ exit
 （详细的docker学习和操作见 此文 docker目录）
 
 
-### （二）、mysql数据结构
+### （二）mysql数据结构
     1、mysql安装目录
 
         配置文件my.ini
@@ -77,8 +77,46 @@ exit
 
         数据：文件里面的内容
 
+## 三、客户端图形化工具
+这里的工具很多，我使用的是navicat破解版（萝卜青菜各有所爱）。网上有很多资源，有时间我再补充这个工具的下载和安装具体步骤
+### （一）安装（暂略）
+![image](/img/java/DB/navicat界面图.png)
 
-## 三、SQL
+### （二）使用
+#### 1、连接
+连接 --- mysql ---输入连接名和密码
+
+![image](/img/java/DB/mysql建立连接.png)
+
+建立连接后，双击启动连接
+#### 2、建立数据库
+
+右键连接 ---- 新建数据库
+
+![image](/img/java/DB/图形化新建数据库.png)
+
+双击启动数据库
+
+#### 3、建立数据表
+
+右键数据库  ---- 新建查询
+
+![image](/img/java/DB/图形化界面新建表1.png)
+
+数据库下面的表 ----  右键表 ---新建表   填入字段和字段的数据类型等，最后点保存输入表名即可
+
+![image](/img/java/DB/图形化界面新建表2.png)
+
+#### 4、插入数据
+双击表，直接填写要插入的内容
+
+![image](/img/java/DB/图形化工具插入数据.png)
+
+
+## 四、SQL
+
+以下有使用命令提示符操作mysql的，也有通过图形界面来操作的
+
 ### （一）sql的概率
     定义了操作所有关系型数据库的规则
 
@@ -367,45 +405,145 @@ select * from 表名;
 
         **基础查询**：
 
++ 创建表stu1并插入若干数据
+```js
+create table stu1 (
+id int,  -- 编号
+name varchar(20), -- 姓名
+age int, -- 年龄
+sex varchar(5), -- 性别
+address varchar(100), -- 地址
+math int, -- 数学
+english int  -- 英语
+);
+
+insert into stu1 values (1,'码云',55,'男','杭州',66,78),(1,'码天',50,'男','杭州',46,28),(1,'码天',50,'男','杭州',46,28),(1,'码地',30,'女','天津',96,78),(1,'码天',50,'男','杭州',46,28),(1,'码天',50,'男','杭州',46,28),(1,'码天',50,'男','杭州',46,28);
+```
+
++ 查询stu1表中含姓名和年龄这两列  的  数据
+```js
+select name,age from stu1;
+```
+![image](/img/java/DB/DQL按字段查询表.png)
+
+
++ 查询stu1表中地址，且重复的只出现一次
+```js
+select distinct address from stu1;
+```
+![image](/img/java/DB/distinct去除重复内容.png)
+
+注意：如果字段中出现空格等这样情况出现，distinct无法去除
+
++ 求总分并处理null的情况
+```js
+// 在stu1表中算出每个人的总分
+select name , math,english , math+english from stu1;
+// 如果参与计算的数字有null，会出现结果为null的情况，通过ifnull()来解决，第一个参数表示会出现null的字段，第二个参数表示null被替换的内容
+select name , math,english , math + IFNULL(english,0) from stu1;
+```
+![image](/img/java/DB/DQL计算并查总分.png)
+
++ 起别名
+```js
+// 起别名
+select name , math 数学,english as 英语, math + IFNULL(english,0) as 总分 from stu1;
+```
+![image](/img/java/DB/DQL起别名.png)
+
+        **条件查询**：
+
++ where子句后跟多条件
+```js
+// 基本运算符： <（小于） 、 >（大于）、<=（小于等于）、 >=（大于等于） 、 =（等于） 、!=或<>（不等于）
+// between ... and  取区间 ，和与类似
+// in               集合，和或类似
+// is null          不为空
+// and  或  &&      表示与
+// or  或  ||       表示或
+// not 或  |        表示非
+
+// 查询年龄大于20
+select * from stu1 where age >20;
+
+// 查询年龄不等于20
+select * from stu1 where age !=20;
+select * from stu1 where age <>20;
+
+// 查询年龄大于等于20。小于等于30
+select * from stu1 where age >=20 && age<=30;
+select * from stu1 where age >=20 and age<=30;//推荐用这个
+select * from stu1 where age between 20 and 30;//更推荐用这个
+
+// 查询年龄20。24,26的
+select * from stu1 where age =20 || age=24 || age=26;
+select * from stu1 where age =20 or age=24 or age=26;
+select * from stu1 where  age in(20,24,26);
+
+// 查询英语成绩为null的
+select * from stu1 where  english is null;
+// 查询英语成绩不为null的
+select * from stu1 where  english is not null;
+```
+        **模糊查询**：
+```js
+/*
+like:
+    _:代表一个字符长度的任意字符 用法与%一样，只不过只代表一个字符
+    %:代表任意长度的任意字符
+*/
+// 查询姓码的人
+select * from stu1 where  name like '码%';
+// 查询第二个字是化的人
+select * from stu1 where  name like '_化%';
+// 查询三个字的人
+select * from stu1 where  name like '___';
+// 查询姓名中包含码的人
+select * from stu1 where  name like '%码%';
+```
+
+        **排序**：
+
+```js
+/*
+order by:
+    asc:升序(默认)
+    desc:降序
+*/
+// 查询数学分数升序排列
+select * from stu1 order by math;
+
+// 查询数学成绩一样，按照英语成绩升序来排列（先满足第一个条件，后满足第二个条件）
+select * from stu1 order by math asc,english asc;
+```
+![image](/img/java/DB/DQL排序.png)
+
+
+        **聚合函数**：
+```js
+/*
+group by:
+    count：统计记录数
+    sum：求和，多个记录求和
+    avg：平均数
+    max：最大值
+    min：最小值
+*/
+//  查询表中记录
+select count(*) 条数 from stu1 ;
+//  英语不为空的记录
+select count(english)  from stu1 ;
+```
+![image](/img/java/DB/DQL排序.png)
+
+        **分组**：
+
+        **分页**：
+
+        **多表操作**：
 
 
 
-## 四、客户端图形化工具
-这里的工具很多，我使用的是navicat破解版（萝卜青菜各有所爱）。网上有很多资源，有时间我再补充这个工具的下载和安装具体步骤
-### （一）安装（暂略）
-![image](/img/java/DB/navicat界面图.png)
-
-### （二）使用
-#### 1、连接
-连接 --- mysql ---输入连接名和密码
-
-![image](/img/java/DB/mysql建立连接.png)
-
-建立连接后，双击启动连接
-
-#### 2、建立数据库
-
-右键连接 ---- 新建数据库
-
-![image](/img/java/DB/图形化新建数据库.png)
-
-双击启动数据库
-
-#### 3、建立数据表
-
-右键数据库  ---- 新建查询
-
-![image](/img/java/DB/图形化界面新建表1.png)
-
-数据库下面的表 ----  右键表 ---新建表   填入字段和字段的数据类型等，最后点保存输入表名即可
-
-![image](/img/java/DB/图形化界面新建表2.png)
-
-#### 4、插入数据
-双击表，直接填写要插入的内容
-
-![image](/img/java/DB/图形化工具插入数据.png)
 
 
-### （三）操作
 
