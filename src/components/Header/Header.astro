@@ -7,7 +7,7 @@
 	import SidebarToggle from './SidebarToggle';
 	import LanguageSelect from './LanguageSelect';
 	import Search from './Search';
-
+	import '../../../public/iconfont/iconfont.css'
 	type Props = {
 		currentPage: string;
 	};
@@ -24,7 +24,8 @@
 		</div>
 		<div class="logo flex">
 			<a href="/">
-				<AstroLogo size={40} />
+				<!-- <AstroLogo size={40} /> -->
+				<span class="iconfont icon-biji1"></span>
 				<h1>{SITE.title ?? 'Documentation'}</h1>
 			</a>
 		</div>

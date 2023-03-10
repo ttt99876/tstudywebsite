@@ -21,6 +21,7 @@ docker run -d --name mysql-test -p 3306:80 mysql
 ## 三、操作MySql
 ### （一）进入mysql容器
 ```js
+
 docker exec -it   mysql名称   bash
 ```
 ### （二）登录
@@ -31,7 +32,6 @@ mysql -u root -p
 ```js
 use mysql
 ```
-
 ## 四、关闭docker中的mysql容器
 ```js
 docker stop mysqlserver
@@ -72,5 +72,8 @@ exit
          刷新权限
         FLUSH PRIVILEGES;
 ```
+
+
+
 
 

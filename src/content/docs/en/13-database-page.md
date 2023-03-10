@@ -553,6 +553,8 @@ select count(ifnull(english,0))  from stu1 ;
 ```
 
         **分组**：
+
++ 简单使用
 ```js
 /*
  group by:
@@ -565,12 +567,264 @@ select sex ,count(ifnull(sex,0)) from stu1 GROUP BY sex ;
 
 //  查询表中男，女的数学成绩平均分 和 人数  
 select sex ,avg(math) 平均分,count(ifnull(sex,0)) 人数 from stu1 GROUP BY sex ;
+
 ```
 ![image](/img/java/DB/DQL分组查询.png)
 
++ where +分组
+```js
+/*
+ where + group by: 条件写在分组前面
+*/
+// 在分组之前限定分组条件：如同学分数达到70分以上的才参与计算
+select sex ,avg(math) 平均分,count(ifnull(sex,0)) 人数 from stu1 where math > 70 GROUP BY sex ;
+```
++ where + 分组  + having
+```js
+/*
+ where + group by  + having:
+ having:和where使用类似，但是是在分组之后限定
+*/
+// 在分组之前限定分组条件：如同学分数达到70分以上的才参与计算，并且组里人数要大于等于2的
+select sex ,avg(math) 平均分,count(id) 人数 from stu1 where math > 70 GROUP BY sex having count(id) >= 2;
+
+select sex ,avg(math) 平均分,count(id) 人数 from stu1 where math > 70 GROUP BY sex having 人数 >= 2;
+```
++ where 和 having 的区别
+
+                where在分组之前进行限定，如果不满足条件，则不参与分组； having在分组之后进行限定，如果不满足结果，则不会被查询出来
+
+                where不能用于聚合函数； having可以跟聚合函数进行判断
+
         **分页**：
 
-        **多表操作**：
++ 语法：limit 开始的索引，每页查询的条数;
+
++ 公式：开始的索引  =  （单前的页码 - 1） * 显示的条数
+
++ 注意：如果要查询的页码每页数据会展示最后一页的数据
+
++ 注意：每个数据库的分页方式会不一样，mysql是这样用的
+```js
+// -- 展示第三页的数据  
+// -- 单前页码是3 ，每页显示两条数据  单前索引 = （单前页码-1） * 显示的数据 = （3-1） *2 =4
+select * from stu1 limit 4,2;
+```
+![image](/img/java/DB/DQL分页查询数据.png)
+
+
+        **约束**：
+
++ 概念：对表中的数据进行限定，保证数据的正确性、有效性和完整性
+
++ 分类：主键约束（primary key）、非空约束（not null）、唯一约束（unique）、外键约束（foreign key）
+
+```js
+/*
+    主键约束：primary key
+
+    非空约束：not null
+        创建表的时候添加非空约束
+        创建表的时候没有添加或者忘记添加，可以
+
+    唯一约束：unique
+
+    外键约束：foreign key 
+
+*/
+
+
+```
++ 非空约束：设定的行的数据不能为空（null）
+
+                 创建表的时候添加非空约束
+
+![image](/img/java/DB/创建表的时候添加非空.png)
+
+                 创建表的时候添加非空约束，可以通过右键表----设计表----查看not null已经被勾选上
+
+```js
+// 语法添加非空操作   not null  
+create table stu2(
+    id int,
+    name varchar(20) not null
+);
+// 如何删除非空操作：修改name的类型----删除非空约束
+alter table stu2 modify name varchar(20);
+```
+
++ 唯一约束：被设定的，不能重复出现，是唯一的,但是可以设置为空，所以一般设置主键的会设置为非空
+```js
+// 如每个人的手机号都不不一样 
+create table stu2(
+    id int,
+    phone varchar(20) unique
+);
+// 验证：故意写重复
+insert into stu2 values (1,'1837631xxxx'),(2,'1887761xxxx'),(3,'1837631xxxx');
+// 验证，不写重复
+insert into stu2 values (1,'1837631xxxx'),(2,'1887761xxxx'),(3,'1830669xxxx');
+select * from stu2;
+```
+![image](/img/java/DB/DQL添加主键.png)
+
++ 主键约束
+
+        含义：
+
+                 非空且唯一（为空会补一个数？自己验证）
+
+                 一张表只能有一个字段为主键
+
+                 主键，为表中记录为唯一的标识，如身份证等
+
+        使用：
+
+                 图形化界面创建表的时候可以添加主键
+
+                 语法创建主键,自行验证
+
+```js
+// 如每个人的手机号都不不一样 
+create table stu2(
+    id int primary key,  -- 给id添加主键约束
+    name varchar(20) 
+);
+// 删除主键的方式需要注意,不是modify ，而是drop
+alter table stu2 drop primary key;
+```
+        自动增长：
+
+                 如果某一列是数值类型的，使用auto_increment可以来完成 根据上一条记录 自动增长
+
+                 一般配合int的主键来使用，也可以不和主键一起
+
+```js
+// 如每个人的手机号都不不一样 
+create table stu2(
+    id int primary key auto_increment,  -- 给id添加主键约束
+    name varchar(20) 
+);
+// 删除自动增长
+alter table stu2 modify id int;
+```
+
++ 外键约束
+
+        含义：将多个表通过外键关联起来，外键一般是关联表的Id ，解决数据冗余的问题
+
+        语法：
+```js
+create table 表名(
+    ...
+    外键列
+    constraint 外键名称 foreign key (外键列名称) reference 主表名称(主表列名称)
+);
+```
+        看似关联却没有关联的两个表，两个表随意删除，不会收到约束
+```js
+// 部门表
+create table department(
+    id int primary key auto_increment,
+    dep_name VARCHAR(20),
+    dep_location VARCHAR(20)
+);
+insert into department values(1,'研发部',	'广州'),(2,'销售部',	'深圳');
+// 员工表
+create table employee(
+    id int primary key auto_increment,
+    name VARCHAR(20),
+    age int,
+    dep_id int
+);
+
+insert into employee values(1	,'zs',	20,	1),(2	,'ls',	23,	1),(3	,'ww'	,32,	1),(4	,'zl',	19,	2),(5,	'mq',	30,	2),(6,	'lb',	29,	2);
+```
+        通过外键关联
+```js
+// 部门表
+create table department(
+    id int primary key auto_increment,
+		dep_name VARCHAR(20),
+		dep_location VARCHAR(20)
+);
+insert into department values(1,'研发部',	'广州'),(2,'销售部',	'深圳');
+// 员工表
+create table employee(
+	id int primary key auto_increment,
+	name VARCHAR(20),
+	age int,
+	dep_id int
+);
+/*
+    外键列
+    constraint 外键名称 foreign key (外键列名称) reference 主表名称(主表列名称)
+*/
+ALTER TABLE employee 
+ADD CONSTRAINT emp_dept_fk FOREIGN KEY (dep_id) REFERENCES department(id);
+
+insert into employee values(1	,'zs',	20,	1),(2	,'ls',	23,	1),(3	,'ww'	,32,	1),(4	,'zl',	19,	2),(5,	'mq',	30,	2),(6,	'lb',	29,	2);
+
+select * from department;
+select * from employee;
+  
+// 删除外键  alter table 表名 drop foreign key 外键名称
+alter table employee drop foreign key emp_dept_fk;
+```
+                此时不能随意删除，也不能添加一个没有存在的部门
+
++ 级联，类似于批量操作一组数据
+```js
+/*
+ALTER TABLE 表名 ADD  constraint 外键名称 foreign key (外键列名称) reference 主表名称(主表列名称) ON UPDATE CASCADE
+
+   ON UPDATE CASCADE  是级联更新
+   ON DELETE CASCADE  是级联删除
+以上可以同时存在，也可以设置多个
+*/
+// 需求：将部门id为1的改为5
+
+// 没有级联的时候，需要以下两步
+update employee set dep_id = null where dep_id =1; //dep_id不能为空，但是可以为Null
+update employee set dep_id = 5 where dep_id is null;
+
+// 级联更新----用了级联，在设置外键的时候，添加ON UPDATE CASCADE，此时修改部门id，员工表会自动更新
+ALTER TABLE employee 
+ADD CONSTRAINT emp_dept_fk FOREIGN KEY (dep_id) REFERENCES department(id) ON UPDATE CASCADE;
+
+// 级联删除----需求：将部门id为1的删除（建议删除的时候要备份）
+ALTER TABLE employee 
+ADD CONSTRAINT emp_dept_fk FOREIGN KEY (dep_id) REFERENCES department(id) ON DELETE CASCADE;
+```
+
+
+
+
+### （八）数据库的设计
+1. 多表之间关系
+
++ 关系
+
+        一对一
+
+                如 人只有一张身份证
+
+        一对多（多对一）
+
+                如 一个部门有多个员工
+
+        多对多
+
+                如 学生和课程，一个学生可以选多门课程，一门课程可以给多个学生选择
+
++ 实现
+
+
+
+2. 数据库的约束：范式
+
+3.
+
 
 
 
