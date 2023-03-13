@@ -1,7 +1,8 @@
 ---
-title: "数据库"
+title: "数据库（一）"
 description: "数据库中的相关知识"
 ---
+此文章用于理解数据库的概率和基本sql语法操作
 
 ## 一、概念
 
@@ -797,9 +798,6 @@ ALTER TABLE employee
 ADD CONSTRAINT emp_dept_fk FOREIGN KEY (dep_id) REFERENCES department(id) ON DELETE CASCADE;
 ```
 
-
-
-
 ### （八）数据库的设计
 1. 多表之间关系
 
@@ -809,21 +807,137 @@ ADD CONSTRAINT emp_dept_fk FOREIGN KEY (dep_id) REFERENCES department(id) ON DEL
 
                 如 人只有一张身份证
 
+                __实现方法__：在任意一边加入外键，关联另一方的主键，并且设置外键为唯一（UNIQUE）
+
         一对多（多对一）
 
-                如 一个部门有多个员工
+                如 一个部门有多个员工；一个工作包对应多个活动
+
+                __实现方法__：在多的建立外键，指向一的主键
 
         多对多
 
                 如 学生和课程，一个学生可以选多门课程，一门课程可以给多个学生选择
 
-+ 实现
+                __实现方法__：建立三张中间表（联合主键，里面的主键具有唯一性），中间表至少包括两个外键，分别关联两张表的主键
 
 
+```js
+// 演示多表之间的关系
+//-- 分类表
+create table tab_categoty(
+	cid int PRIMARY KEY auto_increment,
+	cname VARCHAR(100) not null UNIQUE
+);
+
+//-- 路线表
+create table tab_router(
+	rid int PRIMARY KEY auto_increment,
+	rname VARCHAR(100) not null UNIQUE,
+	rdate date,
+	cid int
+	
+);
+// 一个分类有多条路线，在多的建立外键，指向一的主键
+ALTER TABLE tab_router
+ADD CONSTRAINT router_category_fk FOREIGN KEY (cid) REFERENCES tab_categoty(cid);
+
+//-- 用户表
+create table tab_user(
+	uid int PRIMARY KEY auto_increment,
+	uname VARCHAR(100) not null UNIQUE,
+	PASSWORD VARCHAR(30) not null,
+	name VARCHAR(100),
+	birthday date,
+	sex char(1) DEFAULT '男',
+	tele VARCHAR(100),
+	email VARCHAR(100)
+	
+);
+
+//-- 中间表  一个用户有多种路线，一种路线适合多个用户
+create table tab_favorite(
+	rid int ,
+	date datetime,
+	uid int,
+	PRIMARY KEY(rid,uid),//联合组件
+	FOREIGN key  (rid) references tab_router(rid),
+	FOREIGN key  (uid) references tab_user(uid)
+);
+
+
+
+
+```
 
 2. 数据库的约束：范式
 
-3.
+设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。共有6种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。满足最低要求的范式是第一范式（1NF）。在第一范式的基础上进一步满足更多规范要求的称为第二范式（2NF），其余范式以次类推。一般来说，数据库只需满足第三范式(3NF）就行了
+
++ 第一范式：每一列都是不可分割的原子项，即没有包含的关系
+
+        存在的问题
+
+                存在非常严重的数据冗余
+
+                数据添加存在问题，添加时会存在不合法问题
+
+                删除数据的时候，会连累其他数据被删除
+
++ 第二范式：在1NF的基础上，非码属性必须完全依赖于候选码（消除非主属性对主码的部分函数依赖）
+
+        名词理解
+
+                函数依赖：A-->B  通过A属性（属性组）值可以确定唯一B属性的值，则称B依赖于A。属性---如学号和姓名。属性组---两个属性确定一个属性  如学号和课程名称，确定分数
+
+                完全函数依赖：A-->B  如果A是一个属性组，则B属性值得确定需要依赖于A属性组中所有的属性值。如学号和课程名称，确定分数
+
+                部分函数依赖：A-->B  如果A是属性组，则B属性值得确定只需要依赖于A属性组中某一些值即可。如学号和课程名称，确定姓名
+
+                传递函数依赖：A-->B B-->C  如果通过A属性（属性组）的值，可以确定唯一B属性的值，在通过B属性（属性组）的值可以确定唯一C属性的值，则称C传递函数依赖于A。  如学号---》院系 院系---》院系主任
+
+                码：如果一个属性或属性组被其他属性完全依赖，则该属性或属性值为该表的码 。如姓名和课程能确定其他的所有的列，则姓名和课程就是码。  姓名和课程就是主属性，其他的就是非主属性
+
+        存在的问题
+
+                数据添加存在问题，添加时会存在不合法问题
+
+                删除数据的时候，会连累其他数据被删除
+
++ 第三范式：在2NF基础上，任何非主属性不依赖于其他非主属性（在2NF基础上消除传递依赖）
+
+       在第三范式这里，以上存在的问题都被解决了
+
+       一般上面三种方式，在设计数据库的时候会自然遵循，目的在于将表细分、规划，但是很难避免数据冗余这样的事情发生，因为开发过程中数据会越来越多
+
+3. 数据库的备份和还原
+
++ 备份操作
+        语句：mysqldump -u用户名 -p密码 数据库名称 > 保存路径
+
+        图形化：要备份的数据库上右键----》转储SQL文件---》选择要保存的位置
+
+                结构和数据：字段名和数据
+
+                仅结构：只有字段名
+
+![image](/img/java/DB/数据库备份.png)
+
++ 还原操作
+
+        语句：
+
+                登录数据库 mysql -uroot -proot
+
+                创建数据库 create database 数据库名
+
+                使用数据库 use 数据库名
+
+                还原数据库 source 文件路径
+
+        图形化：新建一个与备份数据库设置相同的数据库，字符集和排序规则要和原数据库保持一致，----》运行sql文件----》找到之前保存的sql文件---》确认路径后，点击开始---》提示成功、关闭页面---》进入新建数据库，刷新数据
+
+![image](/img/java/DB/数据库还原.png)
 
 
 

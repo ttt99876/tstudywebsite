@@ -232,7 +232,6 @@ public class ReflectDemo1 {
 // 打开cmd
 javadoc 文档.java
 ```
-![image](/img/java/javaWeb/javadoc生成API文档.png)
 
 ### （一）概念
 
