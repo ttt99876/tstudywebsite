@@ -41,9 +41,11 @@ docker run -d --name mysql-test -p 3000:80 mysql
 
 ```js
 docker exec -it   mysql名称   bash
+docker exec -it   mysql-test   bash
 ```
     5、登录
 ```js
+// mysql -u 用户名 -p
 mysql -u root -p
 ```
 ![image](/img/java/DB/数据库的进入.png)
@@ -719,7 +721,7 @@ alter table stu2 modify id int;
 create table 表名(
     ...
     外键列
-    constraint 外键名称 foreign key (外键列名称) reference 主表名称(主表列名称)
+    constraint 外键名称 foreign key (外键列名称) references 主表名称(主表列名称)
 );
 ```
         看似关联却没有关联的两个表，两个表随意删除，不会收到约束
