@@ -52,6 +52,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'javaWeb', link: 'en/12-javaweb-page' },
 			{ text: '数据库（一）', link: 'en/13-database1-page' },
 			{ text: '数据库（二）', link: 'en/13-database2-page' },
+			{ text: 'JDBC', link: 'en/14-jdbc-page' },
 			{ text: 'spring-boot', link: 'en/13-spring-boot-page' },
 			{ text: 'py', link: 'en/13-py-page' },
 		],
