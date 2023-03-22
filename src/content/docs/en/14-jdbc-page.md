@@ -204,7 +204,15 @@ int deleteI = statement.executeUpdate(deleteSql);
 
 ### 结果集对象：ResultSet 结果集对象，封装查询结果
 
-            next() ：游标向下移动一行
+            使用步骤：
+
+                      游标向下移动一行 next()
+
+                      判断是否有数据 next()，判断当前行是否是最后一行末尾。返回的是布尔值：如果是，则返回false,如果不是，则返回true
+
+                      获取数据 getXxx(参数)
+
+            next() ：游标向下移动一行,判断当前行是否是最后一行末尾。返回的是布尔值：如果是，则返回false,如果不是，则返回true
 
             getXxx(参数) ：获取数据。 Xxx表示数据类型
 
@@ -268,7 +276,256 @@ public static void main(String[] args) throws Exception {
 ```
 ![image](/img/java/JDBC/ResultSet案例结果.png)
 
-            实际使用
+查询所有数据
+```java
+   public static void main(String[] args) throws Exception {
+        ResultSet re = null;
+        //1、导入jar包
+        //2、注册驱动
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        ////3、获取数据库的连接对象Connection
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db3", "root", "123456");
+        //4、定义sql语句
+        //4.1更新数据
+        String sql = "select * from account";
+
+        //5、获取执行sql对象
+        Statement statement = connection.createStatement();
+        //6、执行sql，接受返回结果
+        try {
+            re = statement.executeQuery(sql);
+            //7、处理结果
+            //光标移动到下一行
+            //if(re.next()){
+            //    //    获取数据
+            //    int id = re.getInt(1);
+            //    String name = re.getString("name");
+            //    double menoy = re.getDouble(3);
+            //    System.out.println(id+"----"+name+"----"+menoy);
+            // }
+            while (re.next()) {//循环查询，知道最后一行
+                int id = re.getInt(1);
+                String name = re.getString("name");
+                double menoy = re.getDouble(3);
+                System.out.println(id + "----" + name + "----" + menoy);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            //8、释放资源
+            //避免空指针异常
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+```
+
+![image](/img/java/JDBC/ResultSet案例循环查询结果.png)
+
+
+            实际使用：查询emp表，并将查询的数据封装为一个集合
+```java
+// 实体类
+package cn.ttt.domin;
+/**
+ * 实体类，用来封装数据
+ */
+
+import java.util.Date;
+public class Emp {
+    private int id;
+    private  String eName;
+    private int jobId;
+    private int mgr;
+    private Date joinDate;
+    private double salary;
+    private double bonus;
+    private int deptId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String geteName() {
+        return eName;
+    }
+
+    public void seteName(String eName) {
+        this.eName = eName;
+    }
+
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
+    }
+
+    public int getMgr() {
+        return mgr;
+    }
+
+    public void setMgr(int mgr) {
+        this.mgr = mgr;
+    }
+
+    public Date getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(Date joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public double getBonus() {
+        return bonus;
+    }
+
+    public void setBonus(double bonus) {
+        this.bonus = bonus;
+    }
+
+    public int getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
+    }
+
+    @Override
+    public String toString() {
+        return "Emp{" +
+                "id=" + id +
+                ", eName='" + eName + '\'' +
+                ", jobId=" + jobId +
+                ", mgr=" + mgr +
+                ", joinDate=" + joinDate +
+                ", salary=" + salary +
+                ", bonus=" + bonus +
+                ", deptId=" + deptId +
+                '}';
+    }
+}
+
+// 操作类
+package cn.ttt.jdbc;
+
+import cn.ttt.domin.Emp;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JdbcDemo4 {
+    public static void main(String[] args) {
+        List<Emp> list1 = new JdbcDemo4().findAll();
+        System.out.println(list1);
+    }
+    public List<Emp> findAll() {
+        Statement statement=null;
+        ResultSet resultSet = null;
+        Connection con = null;
+        List<Emp> list = null;
+        try {
+            //注册驱动
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            //获取连接
+            con = DriverManager.getConnection("jdbc:mysql:///db3", "root", "123456");
+            //定义sql语句
+            String sql = "select * from emp";
+            //获取sql对象
+            statement = con.createStatement();
+            //执行sql语句
+            resultSet = statement.executeQuery(sql);
+            Emp emp =  new Emp();;
+            list = new ArrayList<>();
+            //循环输出emp表中的所有数据，封装成集合
+            while (resultSet.next()){
+                int id = resultSet.getInt(1);
+                String ename = resultSet.getString("ename");
+                int jobId = resultSet.getInt(3);
+                int mgr = resultSet.getInt(4);
+                Date joinDate = resultSet.getDate("joindate");
+                double salary = resultSet.getDouble(6);
+                double bonus = resultSet.getDouble(7);
+                int deptId = resultSet.getInt(8);
+
+                emp.setId(id);
+                emp.seteName(ename);
+                emp.setJobId(jobId);
+                emp.setMgr(mgr);
+                emp.setJoinDate(joinDate);
+                emp.setSalary(salary);
+                emp.setBonus(bonus);
+                emp.setDeptId(deptId);
+                //System.out.println(emp);
+                list.add(emp);
+                //System.out.println(list);
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if(resultSet != null){
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(statement != null){
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        //返回集合
+        return list;
+    }
+}
+
+```
 
 ### 执行sql的对象：PreparedStatement
 
