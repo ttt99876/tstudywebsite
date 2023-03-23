@@ -538,7 +538,107 @@ public class JdbcDemo4 {
 
     解决sql注入：
 
-        通过PreparedStatement来解决
+        通过PreparedStatement来解决，参数使用？（占位符）来表示
+```java
+  String sql = "select * from user where username = ? and password = ?";
+```
+    步骤：
+
+        1、导入驱动jar包
+
+        2、注册驱动
+
+        3、获取数据库连接对象
+
+        4、定义sql
+
+        5、获取执行sql语句的对象PreparedStatement ：Connection.prepareStatement(String sql)
+
+        6、给占位符赋值   ：xxx.setString(第几个参数,赋什么值);
+
+        7、执行sql,接受返回结果   xxx.executeQuery()
+
+        8、处理结果
+
+        9、释放资源
+```java
+package cn.ttt.jdbc;
+
+import cn.ttt.utils.JDBCUtils;
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class JdbcDemo5 {
+    public static void main(String[] args) {
+        //1、键盘录入，接受用户名和密码
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("请输入用户名：");
+        String username = scanner.nextLine();
+        System.out.println("请输入密码：");
+        String password = scanner.nextLine();
+        //boolean flag = new JdbcDemo5().login(username, password);
+        boolean flag2 = new JdbcDemo5().login2(username, password);
+
+        //if(flag){
+        //    System.out.println("登录成功");
+        //}else {
+        //    System.out.println("用户名或密码错误");
+        //}
+        if(flag2){
+            System.out.println("登录成功");
+        }else {
+            System.out.println("用户名或密码错误");
+        }
+    }
+    Connection connection = null;
+    Statement statement = null;
+    PreparedStatement preparedStatement = null;
+    ResultSet resultSet = null;
+
+    /**
+     * 使用PreparedStatement来获取数据
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean login2(String username,String password){
+        if(username == null || password ==null){
+            return false;
+        }
+        //获取连接
+        try {
+            connection = JDBCUtils.getConnection();
+            //定义sql语句
+            //String sql = "select * from user where username = username && password = password";
+            String sql = "select * from user where username = ? and password =  ?";
+
+            //使用预编译来输入sql语句，参数用？代替
+            //获取执行sql对象
+            //statement = connection.createStatement();
+            preparedStatement = connection.prepareStatement(sql);
+            //给?赋值
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2,password);
+            //执行sql,不传参
+            resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            //  释放资源
+            JDBCUtils.close(resultSet,preparedStatement,connection);
+        }
+        return false;
+    }
+
+}
+
+```
+![image](/img/java/JDBC/解决sql注入问题.png)
+
+后期会用preparedStatement对象，不用statement对象了
+
 
 ## 二、封装JDBC工具类
 ### 目的：简化书写
@@ -859,8 +959,425 @@ public class JdbcDemo5 {
 
 ![image](/img/java/JDBC/登录结果.png)
 
-## 三、
+## 三、JDBC控制事务
+在目录数据库（二）中的二里面说到过事务
 
-## 四、
+### 事务的基本介绍
+        1、事务的概念
 
-## 四、
+                一个包含多个步骤的业务操作，被事务管理，那么这些操作要么同时成功，要么同时失败
+
+        2、事务的概念
+
+                开启事务
+
+                提交事务
+
+                回滚事务
+
+        3、使用Connection对象来管理事务
+
+                开启事务：setAutoCommit(boolean autoCommit) 调用该方法设置参数为false，即为开始事务
+
+                提交事务：commit()
+
+                回滚事务：rollback()
+
+        4、注意：
+
+                建议手动开启事务, 用一次 就开启一次
+
+                开启事务之后, 要么commit, 要么rollback
+
+                一旦commit或者rollback, 当前的事务就结束了
+
+                回滚到指定的回滚点, 但是这个时候事务没有结束的
+
+
+### 事务的四大特征
+
+        1、原子性：是不可分割的最小操作单位，要么同时成功，要么同时失败
+
+        2、一致性：事务操作前后，数据总量不变
+
+        3、隔离性：多个事务之间，相互独立
+
+        4、持久性：当事务提交或回滚后，数据库会持久化的保存数据
+
+### 事务的隔离级别（了解）
+
+    多个事务之间隔离的，相互独立的。但是多个事务操作同一批数据，则会引发一些数据，设置不同的隔离级别就可以解决这些问题。
+
+        存在的问题：
+
+                脏读：一个事务，读取到另一个事务中没有提交的数据
+
+                不可重复读（虚读）：在同一个事务中，两次 读取到的数据不一样
+
+                幻读：一个事务操作（DML）数据表中所有记录，另一个事务添加了一条数据，则第一个事务查询不到自己的修改
+
+        隔离级别字符串：
+
+                read uncommitted：读未提交     ----三个问题都会产生
+
+                read committed：读已提交       ----不可重复读、幻读 oracle默认
+
+                repeatable read：可重复读      ----幻读   mysql默认
+
+                serializab：串行化             ----不会出现任何问题
+
+### 练习
+    转账情况
+
+```java
+public static void main(String[] args) {
+        Connection connection=null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement1 = null;
+        try {
+            //获取连接
+            connection = JDBCUtils.getConnection();
+            //定义sql
+            String sql ="update account set menoy = menoy-? where id =?";
+            String sql2 ="update account set menoy = menoy+? where id =?";
+            //执行sql语句
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement1 = connection.prepareStatement(sql2);
+            //设置参数
+            preparedStatement.setInt(1,100);
+            preparedStatement.setInt(2,2);
+            preparedStatement1.setInt(1,100);
+            preparedStatement1.setInt(2,1);
+            //执行结果
+            preparedStatement.executeUpdate();
+            preparedStatement1.executeUpdate();
+            //提交事务
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            JDBCUtils.close1(preparedStatement,connection);
+            JDBCUtils.close1(preparedStatement,null);
+        }
+    }
+```
+    开启事务
+
++ 在sql之前开启事务
+
++ 当所有sql都执行完提交事务
+
++ 在catch中回滚事务
+```java
+ public static void main(String[] args) {
+        Connection connection=null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement1 = null;
+        try {
+            //获取连接
+            connection = JDBCUtils.getConnection();
+            //开启事务
+            connection.setAutoCommit(false);
+            //定义sql
+            String sql ="update account set menoy = menoy-? where id =?";
+            String sql2 ="update account set menoy = menoy+? where id =?";
+            //执行sql语句
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement1 = connection.prepareStatement(sql2);
+            //设置参数
+            preparedStatement.setDouble(1,100);
+            preparedStatement.setInt(2,2);
+            preparedStatement1.setDouble(1,100);
+            preparedStatement1.setInt(2,1);
+            //执行结果
+            preparedStatement.executeUpdate();
+            int i = 3/0;
+            preparedStatement1.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //事务回滚
+            try {
+                if(connection!=null){
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }finally {
+            JDBCUtils.close1(preparedStatement,connection);
+            JDBCUtils.close1(preparedStatement,null);
+        }
+    }
+
+```
+虽然依旧报错，但是数据库里面的数据没有发生任何变化，如果没有开启事务，报错+数据库发生变化
+
+## 四、数据库连接池
+### 概念
+一个容器（集合），存放数据库的容器，当系统初始化后，容器被创建，容器中会申请一些连接对象，当用户来访问数据库时，从容器中获取连接对象，用户访问完之后，会将连接对象归还给容器。
+
+    好处：
+
+        节约资源
+
+        用户访问高效
+
+    实现：
+
+        标准接口：javax.sql包下的DataSource 。有个getConnection()方法，获取连接.如果连接对象Connection是从连接池中获取的，那么调用Connection.close()方法，则不会再关闭连接了，而是归还连接
+
+        使用数据库厂商来实现
+
+                C3P0:数据库连接池技术
+
+                Druid:数据库连接池实现技术，由阿里巴巴提供的
+
+### C3P0使用的步骤(比较老，不在演示)
+
+    步骤：
+
+        1、导入jar包（两个），比较老，更新至2019年，暂停维护了，对于高版本的mysql，可能出现不兼容的情况
+
+                c3p0-0.9.5.2.jar        
+
+                mchange-commons-java-0.2.12.jar
+
+                数据库连接的jar包
+
+        2、定义配置文件
+
+                名称： c3p0.properties 或者 c3p0-config.xml
+
+                路径：直接将文件放在src目录下即可。
+
+        3、创建核心对象 数据库连接池对象：ComboPooledDataSource
+
+        4、获取连接：getConnection
+
+因为我的mysql服务版本比较高，就不在演示了。贴一篇博客：https://blog.csdn.net/qq_60281421/article/details/124331835
+
+
+### druid(阿里的，高效)
+
+    步骤：
+
+        1. 导入jar包 druid-1.0.9.jar
+
+        2. 定义配置文件：
+
+                是properties形式的
+
+                可以叫任意名称，可以放在任意目录下
+
+        3. 加载配置文件。Properties
+
+        4. 获取数据库连接池对象：通过工厂来来获取  DruidDataSourceFactory
+
+        5. 获取连接：getConnection
+
+    演示：
+
+        配置文件
+```java
+driverClassName = com.mysql.cj.jdbc.Driver
+url=jdbc:mysql:///db3
+username=root
+password=123456
+# 初始化的连接数量
+initialSize=5
+# 最大连接数
+maxActive=10
+# 最大等待时间
+maxWait=3000
+```
+        类文件
+```java
+package cn.ttt.druid;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.util.Properties;
+
+/**
+ * 演示druid
+ */
+public class DruidDemo {
+    public static void main(String[] args) throws Exception {
+        //1. 导入jar包 druid-1.0.9.jar
+
+        //2. 定义配置文件：
+
+        //3. 加载配置文件。Properties
+        Properties properties = new Properties();
+        InputStream resourceAsStream = DruidDemo.class.getClassLoader().getResourceAsStream("druid.properties");
+        properties.load(resourceAsStream);
+
+        //4. 获取数据库连接池对象：通过工厂来来获取  DruidDataSourceFactory
+        DataSource dataSource = DruidDataSourceFactory.createDataSource(properties);
+        //5. 获取连接：getConnection
+        Connection connection = dataSource.getConnection();
+        System.out.println(connection);
+    }
+}
+
+```
+    注意：使用mysql8.0后 相应jar包版本。驱动名也要修改
+
+        1.spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+        2.druid 版本 1.1.10以上
+
+        3.mysql-connector-java 版本 8.0.11以上
+
+### druid工具类
+
+    步骤：
+
+        1. 定义一个类 JDBCUtils
+
+        2. 提供静态代码块加载配置文件，初始化连接池对象
+
+        3. 提供方法
+
+                （1）获取连接方法：通过数据库连接池获取连接
+
+                （2）释放资源
+
+                （3）获取连接池的方法  
+
+    演示：
+```java
+package cn.ttt.utils;
+
+import cn.ttt.druid.DruidDemo;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+
+/**
+ * Druid连接池的工具类
+ */
+public class DruidUtils {
+    //定义成员变量 DataSource
+    private static DataSource ds;
+
+    static {
+
+        try {
+            //加载配置文件
+            Properties properties = new Properties();
+            properties.load(DruidDemo.class.getClassLoader().getResourceAsStream("druid.properties"));
+            //获取DataSource
+            ds = DruidDataSourceFactory.createDataSource(properties);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 获取连接
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
+    }
+
+//    释放资源
+    public static void close(Statement stmt,Connection conn) {
+        //if(stmt!=null){
+        //    stmt.close();//归还连接
+        //}
+        //if(conn!=null){
+        //    conn.close();
+        //}
+        close(null,stmt,conn);
+    }
+
+    //    释放资源
+    public static void close(ResultSet res,Statement stmt, Connection conn)  {
+        if(res!=null){
+            try {
+                res.close();//归还连接
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(stmt!=null){
+            try {
+                stmt.close();//归还连接
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(conn!=null){
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    //获取连接池的方法
+    public static DataSource getDataSource(){
+        return ds;
+    }
+}
+
+
+```
+    测试工具类：
+```java
+package cn.ttt.druid;
+
+import cn.ttt.utils.DruidUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
+ * 演示druid
+ */
+public class DruidDemo2 {
+    public static void main(String[] args) {
+
+        Connection connection =null;
+        PreparedStatement preparedStatement =null;
+        try {
+            //获取连接：getConnection
+            connection = DruidUtils.getConnection();
+            //定义sql语句
+            String sql = "insert into account values (null,?,?)";
+            //获取preparedStatement对象
+            preparedStatement = connection.prepareStatement(sql);
+            //设置值
+            preparedStatement.setString(1,"ttz");
+            preparedStatement.setDouble(2,20);
+            //执行sql
+            int count = preparedStatement.executeUpdate();
+            System.out.println(count);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            DruidUtils.close(preparedStatement,connection);
+        }
+        //System.out.println(connection);
+    }
+}
+
+```
+
+## 五、
