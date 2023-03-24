@@ -1380,4 +1380,34 @@ public class DruidDemo2 {
 
 ```
 
-## 五、
+## 五、jdbc Template
+Template意思是模板，JDBCTemplate是Spring为我们提供的，一组访问访问数据库的类库，Spring对JDBC的封装,通俗点说就是Spring对jdbc的封装的模板。
+
+事实上spring jdbcTelemplete用得很少。 大家选择spring，是因为spring给你提供bean 得DI AOP 等功能之后，还作为一个容器帮你管理bean。 同时封装了很多接口，用于整合其他的优秀框架。
+
+### 步骤
+        1.导入jar包
+
+![image](/img/java/JDBC/jdbcTemplate所需要的jar包.png)
+
+        2.创建jdbcTemplate对象，依赖于数据源DateSource
+
+                JdbcTemplate template = new JdbcTemplate(ds)
+
+        3.调用jdbcTemplate的方法来执行CRUD的操作
+
+                update：执行DML语句。增、删、改语句
+
+                query：查询结果，将结果封装为javaBean对象
+
+                queryForXXX：执行查询相关语句   
+
+                    queryForMap():查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合。 注意：这个方法查询的结果集长度只能是1
+
+                    queryForList():查询结果将结果集封装为list集合。注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中。
+
+                    queryForObject：查询结果，将结果封装为对象，一般用于聚合函数的查询。
+
+![image](/img/java/JDBC/jdbcTemplate代码.png)
+不演示增删改查等操作了，mysql版本太高，有些jar包太低，会出现不兼容的问题，如果使用的是5.x的版本的mysql可以继续研究一下哦
+
