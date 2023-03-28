@@ -53,7 +53,7 @@ description: "tomcat中的相关知识"
 
     7、卸载，删除目录就可以了
 
-    8、关闭---ctrl+c
+    8、关闭---启动的黑款中ctrl+c
 
     9、占用端口号解决方法：
 
@@ -66,7 +66,77 @@ description: "tomcat中的相关知识"
 
         （2）修改配置文件，如第5点
 
+        （3）一般使用默认端口号8080，不做修改
+
+## 三、使用
+### 配置
+    方式一：直接将项目放在tomcat目录下的webpacks目录下
+
+        /xxx:项目的访问路径---->虚拟路径  /xxx/xxxx.html
+
+        简化部署：将要部署的项目打包成一个war包，在tomcat下的webpacks会自动解压
 
 
-## 使用
+    方式二：在conf目录下，将要配置的内容写入server.xml文件中，重启服务。缺点：每次修改都需要重启服务
+```java
+// 部署项目内容  docBase：文件存放的路径。path为虚拟目录
+<Context docBase="D:\hello" path="/hehe">
+```
+![image](/img/java/tomcat/配置之方式二.png)
+
+
+    方式三：在conf---Catalina--localhost下新建一个xxx.xml文件。里面编写如下内容：
+```java
+// 部署项目内容  docBase：文件存放的路径。此时虚拟目录是xml文件名
+<Context docBase="D:\hello">
+```
+
+### 静态项目和动态项目
+
+    区别，在webapps\ROOT下，存在有WEB-INF目录的，这个项目称为动态项目
+
+    java动态项目结构
+```js
+---WEB-INF目录
+------web.html：web项目的核心配置文件
+------classes目录：放置字节码文件的目录
+------lib目录：放置依赖的jar包
+```
+### 将tomcat集成到idea中
+    1、run(运行)---Edit Configurations...(编辑配置...)
+
+![image](/img/java/tomcat/idea集成tomcat（1）.png)
+
+
+    2、点击编辑配置模板，找到Tomcat服务器，选择本地
+
+![image](/img/java/tomcat/idea集成tomcat（2）.png)
+
+    3、选择tomcat安装的目录，然后点击确认
+![image](/img/java/tomcat/idea集成tomcat（3）.png)
+
+    4、重复以上1和2步骤，检查是否配置成功
+
+### 创建一个项目
+
+    1、项目---新建
+
+        理论上
+![image](/img/java/tomcat/用集成tomcat后的idea创建项目（按理）.png)
+        实际上
+![image](/img/java/tomcat/用集成tomcat后的idea创建项目（实际1）.png)
+![image](/img/java/tomcat/用集成tomcat后的idea创建项目（实际2）.png)
+
+        猜测出现的原因是因为idea版本的问题
+
+
+    2、目录结构
+![image](/img/java/tomcat/集成tomcat后的项目结构（按理）.png)
+
+附一个创建javaweb项目的帖子 https://www.likecs.com/show-1021162.html
+
+
+
+
+
 

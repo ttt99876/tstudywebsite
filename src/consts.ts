@@ -45,6 +45,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'vue2', link: 'en/05-vue2-page' },
 			{ text: 'react', link: 'en/06-react-page' },
 			{ text: 'ts', link: 'en/07-ts-page' },
+			{ text: 'nginx', link: 'en/08-nginx-page' },
 		],
 		'后端': [
 			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
@@ -55,6 +56,8 @@ export const SIDEBAR: Sidebar = {
 			{ text: '数据库（二）', link: 'en/13-database2-page' },
 			{ text: 'JDBC', link: 'en/14-jdbc-page' },
 			{ text: 'Tomcat', link: 'en/15-tomcat-page' },
+			{ text: 'Servlet', link: 'en/16-servlet-page' },
+			{ text: 'Maven', link: 'en/17-maven-page' },
 			{ text: 'spring-boot', link: 'en/20-spring-boot-page' },
 			{ text: 'py', link: 'en/20-py-page' },
 		],
