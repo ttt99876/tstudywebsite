@@ -59,6 +59,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'Servlet', link: 'en/16-servlet-page' },
 			{ text: 'Maven', link: 'en/17-maven-page' },
 			{ text: 'spring-boot', link: 'en/18-spring-boot-page' },
+			{ text: 'spring注解', link: 'en/19-注解-page' },
 			{ text: 'py', link: 'en/20-py-page' },
 		],
 		'docker': [

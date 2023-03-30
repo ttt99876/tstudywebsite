@@ -923,6 +923,102 @@ public class EmpController {
 ```
 
 ### 分层解耦
+    1、内聚：软件中各个功能模块内部的功能联系
+
+    2、耦合：衡量软件中各个层/模块之间的依赖、关联的程度   依赖程度越高，耦合度越高
+
+    3、软件设计模式：高内聚，低耦合
+
+    4、若想做到高内聚低耦合，就需要借助一个容器来存储实现类，控制层通过去容器中查找想要的实现类，因此就出现了控制反转（IOC）和依赖注入(DI)
+
+        （1）控制反转
+
+                Inversion Of Control，简称IOC。对象的创建控制权由程序自身转移到外部（容器），这种思想称为控制反转
+
+注解|说明|位置
+-|:-:|:-:
+@Component	 | 声明bean的基础注解    | 不属于一下三类时，用此注解
+@Controller	 | @Component的衍生注解  | 标注在控制器类上
+@Service	 | @Component的衍生注解  | 标注在业务类上
+@Repository  | @Component的衍生注解  | 标注在数据访问类上（由于与mybatis整合，用的少）  
+
+                注意：
+
+                        声明bean的时候，可以通过value属性指定bean的名字，如果没有指定，默认为类名首字母小写
+
+                        使用以上四个注解都可以声明bean，但是在springboot集成web开发中，声明控制器bean只能用@Controller
+
+        （2）依赖注入
+
+                Dependency Injection，简称DI。容器为应用程序提供运行时，所依赖的资源，称之为依赖注入。
+
+                @Autowired注解，默认是按照类型进行，如果存在多个相同类型的bean，将会报错。解决方式如下：
+
+                        @Primary 配合控制反转使用。如出现两个实现类，此时可以用这个注解来确定使用那个实现类
+
+                        @Qualifier  配合@Autowired使用。 @Qualifier("首字母小写的实现类的类名")
+
+                        @Resource 和@Autowired注解一样的位置，单独使用，通过name指定实现类的类名（首字母小写）@Resource(name="empServiceB")
+
+                @Autowired和@Resource的区别
+
+                        @Autowired是spring框架提供的注解，而@Resource是JDK提供的注解
+
+                        @Autowired默认是按照类型注入，而@Resource默认是按照名称注入
+
+        （3）Bean对象
+
+                IOC容器中创建、管理的对象，称之为bean
+
+
+        （4）Bean组件扫描
+
+                前面声明bean的四大注解，要想生效，还需要被组件扫描注解@ComponentScan扫描
+
+                @ComponentScan注解虽然没有显示配置，但是实际上已经包含在启动类声明注解@SpringBootApplication中，默认扫描的范围是启动类所在包及其子包
+
+![image](/img/java/springBoot/14-Bean组件扫描.png)
+
+
+
+    5、在三层模式的案例中进行解耦实践
+
+        （1）service和dao层的实现类，交给IOC容器管理，使用注解@Component
+```java
+@Component  //将单前类交给IOC容器管理，成为IOC容器中的bean
+public class EmpServiceA implements EmpService {...}
+
+```
+```java
+@Component  //将单前类交给IOC容器管理，成为IOC容器中的bean
+public class EmpDaoA implements EmpDao {...}
+```
+
+        （2）为controller及service注入运行时，依赖的对象.使用注解@Autowired
+```java
+@Component  //将单前类交给IOC容器管理，成为IOC容器中的bean
+public class EmpServiceA implements EmpService {
+    @Autowired //运行时，IOC容器会提供该类型的bean对象，并赋值给该变量——依赖注入
+    private EmpDaoA empDaoA ;
+    ...
+}
+```
+```java
+@RestController
+public class EmpController {
+    @Autowired //运行时，IOC容器会提供该类型的bean对象，并赋值给该变量——依赖注入
+    private EmpService empService;
+    @RequestMapping("/listEmp")
+    ...
+}
+
+```
+
+        （3）运行测试
+
+                如果后期中用到的是EmpServiceD，而不是EmpServiceA实现类，只需要将EmpServiceA里面的注解@Component注释，给EmpServiceD加上就可以了，而这就实现了解耦（脱离联系，又能很快的建立联系）
+
+
 
 
 ###
