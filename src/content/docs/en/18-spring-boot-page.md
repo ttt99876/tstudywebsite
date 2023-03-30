@@ -766,3 +766,163 @@ public class EmpController {
 
     （可自行了解）出现的知识点解析xml文件的依赖dom4j，stream()：可以把Stream流看作是遍历数据集合的一个高级迭代器
 
+## 八、三层架构
+### 三层是什么
+![image](/img/java/springBoot/13-分层原理和职责.png)
+
+    1、三层 
+
+        （1）controller:控制层,接受前端发送的请求，对请求进行处理，并响应数据
+
+        （2）service:业务逻辑层，处理具体的业务逻辑
+
+        （3）dao:数据访问层（Data Access Object）/持久层，负责数据访问操作，包括数据的增删改查
+
+                接口：因为数据来源可能是文件的解析、数据库里面的数据 或者 第三方提供的接口，因此数据层的操作用接口才能达到多方数据来源不同的灵活性
+
+                实现类：后期维护的时候如果要修改功能只需要修改实现类里面的那个代码，而不需要修改其他包的代码
+
+        **思考**：为什么数据层和业务层需要接口和实现类，将接口和实现类写在一起不可以吗？
+
+    2、优势：
+
+        （1）结构清晰，耦合度低
+
+        （2）可维护性高，可扩展性高
+
+        （3）利于开发任务同步进行，容易适应需求变化
+
+    3、将第七点中的代码进行分层
+
+        （1）数据访问层
+```java
+// 接口
+package com.ttt.dao;
+
+import com.ttt.pojo.Emp;
+
+import java.util.List;
+
+/**
+ * 因为数据来源可能是文件的解析、数据库里面的数据 或者 第三方提供的接口，因此数据层的操作用接口才能达到多方数据来源不同的灵活性
+ */
+public interface EmpDao {
+    //获取员工列表数据
+    public List<Emp> listEmp();
+}
+
+
+
+// 实现类
+package com.ttt.dao.impl;
+
+import com.ttt.dao.EmpDao;
+import com.ttt.pojo.Emp;
+import com.ttt.utils.XmlParserUtils;
+
+import java.util.List;
+
+public class EmpDaoA implements EmpDao {
+    @Override
+    public List<Emp> listEmp() {
+        //1、解析xml文件---工具
+        //动态加载路径资源emp.xml
+        String file = this.getClass().getClassLoader().getResource("emp.xml").getFile();
+        List<Emp> empList = XmlParserUtils.parse(file, Emp.class);
+        return empList;
+    }
+}
+
+```
+
+        （2）业务层
+```java
+// 接口
+package com.ttt.service;
+
+import com.ttt.pojo.Emp;
+
+import java.util.List;
+
+public interface EmpService {
+    //获取员工列表
+    public List<Emp> listEmp();
+}
+
+
+
+// 实现类
+package com.ttt.service.impl;
+
+import com.ttt.dao.impl.EmpDaoA;
+import com.ttt.pojo.Emp;
+import com.ttt.service.EmpService;
+
+import java.util.List;
+
+public class EmpServiceA implements EmpService {
+    private EmpDaoA empDaoA = new EmpDaoA();
+    @Override
+    public List<Emp> listEmp() {
+        //1、调用dao,获取数据
+        List<Emp> empList = empDaoA.listEmp();
+        //2、转换数据，男女性别，职位等
+        //用stream流来处理
+        empList.stream().forEach(emp -> {
+            //处理性别
+            String gender = emp.getGender();
+            if("1".equals(gender)){
+                emp.setGender("男");
+            }else if("2".equals(gender)){
+                emp.setGender("女");
+            }
+            //处理工作1:讲师 2：班主任  3：就业导师
+            String job = emp.getJob();
+            if("1".equals(job)){
+                emp.setJob("讲师");
+            }else if("2".equals(job)){
+                emp.setJob("班主任");
+            }else if("3".equals(job)){
+                emp.setJob("就业导师 ");
+            }
+        });
+
+        return empList;
+    }
+}
+
+```
+
+        （1）控制层
+```java
+package com.ttt.controller;
+
+import com.ttt.pojo.Emp;
+import com.ttt.pojo.Result;
+import com.ttt.service.EmpService;
+import com.ttt.service.impl.EmpServiceA;
+import com.ttt.utils.XmlParserUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class EmpController {
+    private EmpService empService = new EmpServiceA();
+    @RequestMapping("/listEmp")
+    public Result list(){
+        //1、调用service获取数据
+        List<Emp> empList = empService.listEmp();
+
+        //3、将解析的内容作为结果返回给浏览器
+        return Result.success(empList);
+    }
+  
+}
+```
+
+### 分层解耦
+
+
+###
