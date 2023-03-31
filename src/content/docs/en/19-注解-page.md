@@ -201,5 +201,28 @@ public @interface RequestParam {
 
 ![image](/img/java/springBoot/14-Bean组件扫描.png)
 
+## 十三、@Mapper
+    在运行时，会自动生成该接口的实现类对象（代理对象），并且将该对象交给IOC容器管理
+```java
+@Mapper 
+public interface UserMapper {
+    public List<User> list();
+}
+```
+## @SpringBootTest 
+    springboot整合单元测试的注解
+```java
+@SpringBootTest //springboot整合单元测试的注解
+class MybatisDemoApplicationTests {
+
+    @Test //方法测试
+    void contextLoads() {
+    }
+
+}
+```
+
+
+
 
 
