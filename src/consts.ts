@@ -60,6 +60,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'Maven', link: 'en/17-maven-page' },
 			{ text: 'spring-boot', link: 'en/18-spring-boot-page' },
 			{ text: 'spring注解', link: 'en/19-注解-page' },
+			{ text: 'MyBatis', link: 'en/20-mybatis-page' },
 			{ text: 'py', link: 'en/20-py-page' },
 		],
 		'docker': [
