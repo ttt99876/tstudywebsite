@@ -1017,8 +1017,3 @@ public class EmpController {
         （3）运行测试
 
                 如果后期中用到的是EmpServiceD，而不是EmpServiceA实现类，只需要将EmpServiceA里面的注解@Component注释，给EmpServiceD加上就可以了，而这就实现了解耦（脱离联系，又能很快的建立联系）
-
-
-
-
-###

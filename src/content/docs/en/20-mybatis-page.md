@@ -174,11 +174,19 @@ class MybatisDemoApplicationTests {
 
 ![image](/img/java/mybatis/01-mybatis入门测试结果.png)
 
-###
 
-###
+## 配置mysql方言
 
-###
+    选中sql语句，右键，选择make 'list()' default ------ 选择第三个-----搜索mysql-----选中它
+
+![image](/img/java/mybatis/02-配置mysql方言.png)
+
+## 配置数据库的连接
+
+![image](/img/java/mybatis/03-配置数据库.png)
+
+
+
 
 ## 增删改查
 

@@ -48,6 +48,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'nginx', link: 'en/08-nginx-page' },
 		],
 		'后端': [
+			{ text: 'java实际开发需要的配置', link: 'en/11-java导航-page' },
 			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
 			{ text: 'java入门（基本语法）', link: 'en/11-java01-page' },
 			{ text: 'java入门（高级语法）', link: 'en/11-java02-page' },
@@ -64,8 +65,8 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'py', link: 'en/20-py-page' },
 		],
 		'docker': [
-			{ text: 'docker安装和使用', link: 'en/20-docker-install-page' },
-			{ text: 'docker安装mysql并使用', link: 'en/20-docker-mysql-page' },
+			{ text: 'docker安装和使用', link: 'en/40-docker-install-page' },
+			{ text: 'docker安装mysql并使用', link: 'en/40-docker-mysql-page' },
 		],
 	},
 };
