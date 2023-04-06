@@ -185,6 +185,74 @@ class MybatisDemoApplicationTests {
 
 ![image](/img/java/mybatis/03-配置数据库.png)
 
+## mybatis和jdbc的区别
+
+![image](/img/java/mybatis/04-mybatis和jdbc的区别.png)
+
+## 数据库连接池
+在jdbc章节中已经介绍过了
+
+    1、概述
+
+            数据库连接池是个容器，负责分配、管理数据库连接（Connection）
+
+            它允许应用程序重复使用一个现有的数据库连接，而不是再重新建议一个
+
+            释放空闲时间超过最大空闲时间的连接，来避免因为没有释放连接而引起的数据库连接遗漏
+
+            标准接口：DataSource
+
+                官方提供的数据库连接池接口，由第三方组织实现此接口
+
+                功能：获取连接 Connection getConnection() throws SQLException;
+
+    2、优势
+
+            资源重用
+
+            提升系统响应速度
+
+            避免数据库连接遗漏
+
+    3、不想使用默认的，想用durid，可以找到durid的配置，在xml文件中添加配置就可以了
+
+
+## lombok
+    是一个实用的java类库，能通过注解的形式自动生成构造器、getter/setter、equals、hashcode、toString等方法，并可以自动化生成日志变量，简化java开发、提高效率
+
+注解|作用
+-|:-:
+@Getter/@Setter	     | 为所有的属性提供get/set方法  
+@ToString            | 会给类自动生成易阅读的toString方法 
+@EqualsAndHashCode	 | 根据类所拥有的非静态字段自动重写equals方法和hashCode方法 
+@Data                | 提供了更综合的生成代码功能（@Getter + @Setter + @ToString + @EqualsAndHashCode） 
+@NoArgsConstructor   | 为实体类生成无参的构造器方法
+@AllArgsConstructor  | 为实体类生成除了static修饰的字段之外带有各参数的构造器方法
+
+    目的
+![image](/img/java/mybatis/05-lombok.png)
+
+    使用
+```java
+<!-- 添加lombok，减少实体类的臃肿-->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+```
+    实体类
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    private Integer id;
+    private String name;
+    private Short age;
+    private Short gender;
+    private String phone;
+}
+```
 
 
 
