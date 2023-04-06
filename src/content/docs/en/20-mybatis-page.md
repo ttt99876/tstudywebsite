@@ -256,7 +256,170 @@ public class User {
 
 
 
-## 增删改查
+## 实践--掌握mybatis
+### 准备环境
+    1、创建数据库
+```js
+-- 部门管理
+create table dept(
+    id int unsigned primary key auto_increment comment '主键ID',
+    name varchar(10) not null unique comment '部门名称',
+    create_time datetime not null comment '创建时间',
+    update_time datetime not null comment '修改时间'
+) comment '部门表';
+
+insert into dept (id, name, create_time, update_time) values(1,'学工部',now(),now()),(2,'教研部',now(),now()),(3,'咨询部',now(),now()), (4,'就业部',now(),now()),(5,'人事部',now(),now());
+
+
+
+-- 员工管理
+create table emp (
+  id int unsigned primary key auto_increment comment 'ID',
+  username varchar(20) not null unique comment '用户名',
+  password varchar(32) default '123456' comment '密码',
+  name varchar(10) not null comment '姓名',
+  gender tinyint unsigned not null comment '性别, 说明: 1 男, 2 女',
+  image varchar(300) comment '图像',
+  job tinyint unsigned comment '职位, 说明: 1 班主任,2 讲师, 3 学工主管, 4 教研主管, 5 咨询师',
+  entrydate date comment '入职时间',
+  dept_id int unsigned comment '部门ID',
+  create_time datetime not null comment '创建时间',
+  update_time datetime not null comment '修改时间'
+) comment '员工表';
+
+INSERT INTO emp
+	(id, username, password, name, gender, image, job, entrydate,dept_id, create_time, update_time) VALUES
+	(1,'jinyong','123456','金庸',1,'1.jpg',4,'2000-01-01',2,now(),now()),
+	(2,'zhangwuji','123456','张无忌',1,'2.jpg',2,'2015-01-01',2,now(),now()),
+	(3,'yangxiao','123456','杨逍',1,'3.jpg',2,'2008-05-01',2,now(),now()),
+	(4,'weiyixiao','123456','韦一笑',1,'4.jpg',2,'2007-01-01',2,now(),now()),
+	(5,'changyuchun','123456','常遇春',1,'5.jpg',2,'2012-12-05',2,now(),now()),
+	(6,'xiaozhao','123456','小昭',2,'6.jpg',3,'2013-09-05',1,now(),now()),
+	(7,'jixiaofu','123456','纪晓芙',2,'7.jpg',1,'2005-08-01',1,now(),now()),
+	(8,'zhouzhiruo','123456','周芷若',2,'8.jpg',1,'2014-11-09',1,now(),now()),
+	(9,'dingminjun','123456','丁敏君',2,'9.jpg',1,'2011-03-11',1,now(),now()),
+	(10,'zhaomin','123456','赵敏',2,'10.jpg',1,'2013-09-05',1,now(),now()),
+	(11,'luzhangke','123456','鹿杖客',1,'11.jpg',5,'2007-02-01',3,now(),now()),
+	(12,'hebiweng','123456','鹤笔翁',1,'12.jpg',5,'2008-08-18',3,now(),now()),
+	(13,'fangdongbai','123456','方东白',1,'13.jpg',5,'2012-11-01',3,now(),now()),
+	(14,'zhangsanfeng','123456','张三丰',1,'14.jpg',2,'2002-08-01',2,now(),now()),
+	(15,'yulianzhou','123456','俞莲舟',1,'15.jpg',2,'2011-05-01',2,now(),now()),
+	(16,'songyuanqiao','123456','宋远桥',1,'16.jpg',2,'2010-01-01',2,now(),now()),
+	(17,'chenyouliang','123456','陈友谅',1,'17.jpg',NULL,'2015-03-21',NULL,now(),now());
+```
+
+    2、创建springboot工程，引入对应的起步依赖（mybatis、mysql驱动、lombok）
+
+![image](/img/java/mybatis/06-实战创建项目.png)
+
+    3、配置数据库连接信息
+```java
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql:///mybatis
+spring.datasource.username=root
+spring.datasource.password=xxxxx
+```
+
+    4、创建对应的实体类Emp
+```java
+package com.ttt.pojo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Emp {
+    private Integer id;
+    private String username;
+    private String password;
+    private String name;
+    private Short gender;
+    private String image;
+    private Short job;
+    private LocalDate entrydate;
+    private Integer deptId;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+}
+```
+
+    5、准备Mapper接口EmpMapper
+```java
+package com.ttt.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper  //会自动创建代理对象
+public interface EmpMapper {
+
+}
+
+```
+
+### 执行删除操作
+    1、在EmpMapper接口中操作
+
+    2、在mybatis中，动态的可以通过#{动态的内容}来书写sql语句。动态的内容是方法中传递的参数
+
+            `#{}`:执行sql时，会将#{}替换为？，生成预编译sql，会自动设置参数值。使用时机：参数传递，都使用#{}
+
+            `${}`：拼接sql。直接将参数拼接在sql语句中，存在sql注入问题。使用时机：如果对表名、列名进行动态设置时使用，不常使用
+
+```java
+//更据id删除一条数据
+    @Delete("delete from emp where id = #{id}")
+    public void deleteFn(Integer id);
+```
+    3、日志输出,在application.properties中配置
+```java
+#指定mybatis输出日志的位置，输出控制台
+mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+```
+![image](/img/java/mybatis/07-实战预编译sql.png)
+    4、预编译性能更高、更安全（防止SQL注入）
+
+### 新增
+
+    1、普通新增 
+
+            （1）在mapper接口中添加方法，多个参数可以使用实体类来装起来
+```java
+//新增
+    @Update("insert into emp(id,username,password,name,gender,image,job,entrydate,dept_id,create_time,update_time) values (#{id},#{username},#{password},#{name},#{gender},#{image},#{job},#{entrydate},#{deptId},#{createTime},#{updateTime})")
+    public void insert(Emp emp);
+```
+             （2）测试,注意写入日期的写法
+```java
+  @Test
+    public void testLogin(){
+       Emp emp = new Emp();
+        emp.setId(18);
+        emp.setUsername("ttt");
+        emp.setPassword("123456");
+        emp.setName("tt");
+        emp.setGender((short)1);
+        emp.setImage("18.png");
+        emp.setJob((short)2);
+        emp.setEntrydate(LocalDate.of(2022,1,1));
+        emp.setDeptId(1);
+        emp.setCreateTime(LocalDateTime.now());
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.insert(emp);
+    }
+```
+
+    2、主键返回
+
+### 执行更新操作
+
+
+
 
 
 ## 动态sql

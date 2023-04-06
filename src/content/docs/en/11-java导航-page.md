@@ -317,6 +317,13 @@ exit
 
 ![image](/img/java/mybatis/03-配置数据库.png)
 
+    3、application.properties配置
+```java
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql:///mybatis
+spring.datasource.username=root
+spring.datasource.password=xxxxx
+```
 
 ## 七、redis
     1、redis下载地址 
