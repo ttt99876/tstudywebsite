@@ -263,3 +263,16 @@ public class User {
     private String phone;
 }
 ```
+
+## @Options
+    在新增数据的时候，自动将生成的主键值，赋值给emp对象的id属性
+
+            useGeneratedKeys：是否是自增长，必须设置 true
+
+            keyProperty：实体类主键属性名称
+
+            keyColumn：数据库主键字段名称
+```java
+// keyProperty指定要出现的值，useGeneratedKeys
+@Options(keyProperty = "id",useGeneratedKeys = true)
+```
