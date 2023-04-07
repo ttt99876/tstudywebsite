@@ -21,7 +21,7 @@ export const KNOWN_LANGUAGE_CODES = Object.values(KNOWN_LANGUAGES);
 
 // export const GITHUB_EDIT_URL = `https://github.com/withastro/astro/tree/main/examples/docs`;
 
-// export const COMMUNITY_INVITE_URL = `https://astro.build/chat`;
+export const COMMUNITY_INVITE_URL = `https://astro.build/chat`;
 
 // See "Algolia" section of the README for more information.
 export const ALGOLIA = {
@@ -48,7 +48,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'nginx', link: 'en/08-nginx-page' },
 		],
 		'后端': [
-			{ text: 'java实际开发需要的配置', link: 'en/11-javaConfiguration-page' },
+			{ text: 'java实际开发需要的配置', link: 'en/11-java-configuration-page' },
 			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
 			{ text: 'java入门（基本语法）', link: 'en/11-java01-page' },
 			{ text: 'java入门（高级语法）', link: 'en/11-java02-page' },
