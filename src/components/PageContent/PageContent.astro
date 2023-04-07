@@ -1,6 +1,7 @@
 ---
 import type { MarkdownHeading } from 'astro';
-import MoreMenu from '../RightSidebar/MoreMenu.astro';
+// 适应手机版本时候出现的底部导航
+// import MoreMenu from '../RightSidebar/MoreMenu.astro';
 import TableOfContents from '../RightSidebar/TableOfContents';
 
 type Props = {
@@ -20,9 +21,10 @@ const { title, headings, githubEditUrl } = Astro.props;
 		</nav>
 		<slot />
 	</section>
-	<nav class="block sm:hidden">
+	<!-- 适应手机版本时候出现的底部导航 -->
+	<!-- <nav class="block sm:hidden">
 		<MoreMenu editHref={githubEditUrl} />
-	</nav>
+	</nav> -->
 </article>
 
 <style>
