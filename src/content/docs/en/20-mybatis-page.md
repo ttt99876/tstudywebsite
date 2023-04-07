@@ -416,7 +416,107 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
     2、主键返回
 
-### 执行更新操作
+            添加一个注解@Options
+```java
+//新增
+@Options(keyProperty = "id",useGeneratedKeys = true)
+@Update("insert into emp(username,password,name,gender,image,job,entrydate,dept_id,create_time,update_time) values (#{username},#{password},#{name},#{gender},#{image},#{job},#{entrydate},#{deptId},#{createTime},#{updateTime})")
+public void insert(Emp emp);
+```
+```java
+@Test
+public void testLogin(){
+    Emp emp = new Emp();
+    //emp.setId(18);
+    emp.setUsername("ttt2");
+    emp.setPassword("123456");
+    emp.setName("tt");
+    emp.setGender((short)1);
+    emp.setImage("18.png");
+    emp.setJob((short)2);
+    emp.setEntrydate(LocalDate.of(2022,1,1));
+    emp.setDeptId(1);
+    emp.setCreateTime(LocalDateTime.now());
+    emp.setUpdateTime(LocalDateTime.now());
+
+    empMapper.insert(emp);
+    //System.out.println(res);
+    System.out.println(emp.getId());
+}
+```
+
+
+### 更新操作
+    确定使用的sql语句，通过占位符来传递要求改的内容
+```java
+//更新
+    @Update("update emp set username=#{username},password=#{password},name=#{name},gender=#{gender},image=#{image},job=#{job},entrydate=#{entrydate},dept_id=#{deptId},create_time=#{createTime},update_time=#{updateTime} where id = #{id}")
+    public void update(Emp emp);
+```
+```java
+ @Test
+    public void testUpdate(){
+        Emp emp = new Emp();
+        emp.setId(21);
+        emp.setUsername("ljy");
+        emp.setPassword("123");
+        emp.setName("jy");
+        emp.setGender((short)1);
+        emp.setImage("21.png");
+        emp.setJob((short)2);
+        emp.setEntrydate(LocalDate.of(2023,1,20));
+        emp.setDeptId(1);
+        emp.setCreateTime(LocalDateTime.now());
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.update(emp);
+    }
+```
+
+### 查询
+    1、根据id查询
+```java
+//查询
+    @Select("select * from emp where id = #{id}")
+    public Emp getById(Integer id);
+```
+```java
+  @Test
+    public void testGetById(){
+        Emp emp = empMapper.getById(21);
+        System.out.println(emp);//Emp(id=21, username=ljy, password=123, name=jy, gender=1, image=21.png, job=2, entrydate=2023-01-20, deptId=null, createTime=null, updateTime=null)
+    }
+```
+        输出的封装结果deptId=null, createTime=null, updateTime=null，出现这个的原因：
+
+            实体类属性名和数据库表查询返回的字段名不一致，mybatis不能自动封装。
+
+        解决方案
+
+            给字段起别名
+```java
+ //查询
+    @Select("select id,username,password,name,gender,image,job,entrydate,dept_id as deptId ,create_time createTime,update_time updateTime from emp where id = #{id}")
+    public Emp getById(Integer id);
+```
+
+            @Result注解手动映射封装
+```java
+   @Results({
+            @Result(column = "dept_id",property = "deptId"),
+            @Result(column = "create_time",property = "createTime"),
+            @Result(column = "update_time",property = "updateTime")
+    })
+    @Select("select * from emp where id = #{id}")
+    public Emp getById(Integer id);
+```
+            开启mybatis的驼峰命名自动映射开关，在application.properties配置
+```java
+// 开启mybatis的驼峰命名自动映射开关
+mybatis.configuration.map-underscore-to-camel-case=true
+```
+
+
+    2、
 
 
 
