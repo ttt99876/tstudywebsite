@@ -48,7 +48,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'nginx', link: 'en/08-nginx-page' },
 		],
 		'后端': [
-			{ text: 'java实际开发需要的配置', link: 'en/11-java导航-page' },
+			{ text: 'java实际开发需要的配置', link: 'en/11-javaConfiguration-page' },
 			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
 			{ text: 'java入门（基本语法）', link: 'en/11-java01-page' },
 			{ text: 'java入门（高级语法）', link: 'en/11-java02-page' },
@@ -60,7 +60,7 @@ export const SIDEBAR: Sidebar = {
 			{ text: 'Servlet', link: 'en/16-servlet-page' },
 			{ text: 'Maven', link: 'en/17-maven-page' },
 			{ text: 'spring-boot', link: 'en/18-spring-boot-page' },
-			{ text: 'spring注解', link: 'en/19-注解-page' },
+			{ text: 'spring注解', link: 'en/19-annotation-page' },
 			{ text: 'MyBatis', link: 'en/20-mybatis-page' },
 			{ text: 'py', link: 'en/20-py-page' },
 		],
