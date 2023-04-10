@@ -509,14 +509,34 @@ public void testLogin(){
     @Select("select * from emp where id = #{id}")
     public Emp getById(Integer id);
 ```
-            开启mybatis的驼峰命名自动映射开关，在application.properties配置
+            开启mybatis的驼峰命名自动映射开关，在application.properties配置,前提是要严格遵守这两种命名格式
 ```java
 // 开启mybatis的驼峰命名自动映射开关
 mybatis.configuration.map-underscore-to-camel-case=true
 ```
 
 
-    2、
+    2、条件查询（精确查询和模糊查询）
+```java
+ @Select("select * from emp where name like concat('%',#{name},'%')  and gender = #{gender} and entrydate between #{begin} and #{end} order by update_time desc")
+    public List<Emp> getByIf(@Param("name")String name ,@Param("gender")Short gender,@Param("begin")LocalDate begin, @Param("end")LocalDate end);
+```
+```java
+ @Test
+    public void testGetByIf(){
+        //time.setTime(2014-2-12);
+        List<Emp> empList = empMapper.getByIf("张",(short)1, LocalDate.of(2010, 2, 2), LocalDate.of(2020, 2, 2));
+        System.out.println(empList);
+    }
+```
+
+        模糊查询可以使用%
+
+        使用concat(str1,str2)，将多个字符连接为一个字符串，如concat('%',#{name},'%')
+
+        @Param注解，可以解决：没有指定具体参数名称并一一对应的问题
+
+
 
 
 

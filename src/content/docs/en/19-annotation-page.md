@@ -276,3 +276,13 @@ public class User {
 // keyProperty指定要出现的值，useGeneratedKeys
 @Options(keyProperty = "id",useGeneratedKeys = true)
 ```
+
+## @Param
+    用来在DAO层中声明参数的注解方式 或者  指明一个函数的参数的意思
+
+    可以归档方法或构造器的某个单一参数，或者归档类、接口以及泛型方法的类型参数。
+```java
+public List<Emp> getByIf(@Param("name")String name ,@Param("gender")Short gender,@Param("begin")LocalDate begin, @Param("end")LocalDate end);
+
+List<Emp> empList = empMapper.getByIf("张",(short)1, LocalDate.of(2010, 2, 2), LocalDate.of(2020, 2, 2));
+```
