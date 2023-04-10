@@ -536,10 +536,73 @@ mybatis.configuration.map-underscore-to-camel-case=true
 
         @Param注解，可以解决：没有指定具体参数名称并一一对应的问题
 
+                2.x版本内置插件
+
+                1.x版本没有内置插件，需要加Param
+
+![image](/img/java/mybatis/08-spring版本问题.png)
 
 
+## XML映射文件
+    规范
 
+        XML映射文件的名称与Mapper接口名称不一致，并且将xml映射文件和Mapper接口放置在相同的包下（同包同名）
 
+![image](/img/java/mybatis/09-同包同名.png)
 
+        XML映射文件的namespace属性为Mapper接口全限定名一致
+
+![image](/img/java/mybatis/10-XML映射文件.png)
+
+        XML映射文件中sql语句的id与Mapper接口中的方法名一致，并保持返回类型一致
+
+![image](/img/java/mybatis/11-Mapper接口.png)
+
+    操作
+
+        在resources下----新建目录（输入与Mapper接口名称的同包名com/ttt/mapper）----新建文件（与Mapper接口同名）
+
+        去mybatis官网中获取xml的配置
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+    <select id="selectBlog" resultType="Blog">
+        select * from Blog where id = #{id}
+    </select>
+</mapper>
+```
+
+        修改namespace属性为Mapper接口全限定名一致（namespace="com.ttt.mapper.EmpMapper"）
+
+        修改id="selectBlog"为Mapper接口定义的方法名（id="getByIf"）
+
+        返回类型（resultType="com.ttt.pojo.Emp"）
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttt.mapper.EmpMapper">
+    <!--resultType:单条记录所封装的类型 （返回的类型）   -->
+    <select id="getByIf" resultType="com.ttt.pojo.Emp">
+        select * from emp where name like concat('%',#{name},'%')  and gender = #{gender} and entrydate between #{begin} and #{end} order by update_time desc
+    </select>
+</mapper>
+```
+```java
+// mapper接口
+public List<Emp> getByIf(@Param("name")String name ,@Param("gender")Short gender,@Param("begin")LocalDate begin, @Param("end")LocalDate end);
+```
+### tips:
+MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
+
+    说明
+
+        使用注解还是xml形式，取决于团队，简单的sql使用注解，复杂的建议用xml
 
 ## 动态sql
+
+
