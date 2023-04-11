@@ -695,6 +695,51 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
 ```
 
 ### foreach
+    
+
+        collection:遍历的集合
+
+        item:遍历出来的元素
+
+        separator:分隔符
+
+        open:遍历开始前拼接的sql片段
+
+        close:遍历结束后拼接的sql片段
+      
+```java
+// 接口
+ // 批量删除数据
+    public void deleteByIds(List<Integer> list);
+```
+```xml
+<delete id="deleteByIds">
+    delete from emp where id in
+    <foreach collection="list" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
+</delete>
+
+```
+```java
+// 测试
+@Test
+public void testDeleteByIds(){
+    List<Integer> ids = Arrays.asList(21,23);
+    empMapper.deleteByIds(ids);
+}
+```
+    注意：使用ids会报错
+
+        在mybatis 中，当 Mapper传入的是 List 参数时,会自动将参数封装成 Map 参数,而 map中的 key 会自动用 list , value 就是你传入的 List 参数。
+
+    解决
+
+        第一种: 将 List 参数封装为 Map 然后再传入,在 XML 配置页面写上相应 key 值
+
+        第二种: 将 collection 的值修改为 list
+
+
 
 
 
