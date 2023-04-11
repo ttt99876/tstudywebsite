@@ -695,7 +695,7 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
 ```
 
 ### foreach
-    
+    用于多个相同条件循环遍历
 
         collection:遍历的集合
 
@@ -739,11 +739,33 @@ public void testDeleteByIds(){
 
         第二种: 将 collection 的值修改为 list
 
-
-
-
-
 ### sql和include
+    为解决sql代码重复冗余的问题，sql负责抽取sql代码，include负责插入抽取的代码
+```xml
+
+ <!--抽取sql片段-->
+    <sql id="commonSelect">
+        select id,username, password, name ,gender ,image ,job ,entrydate, dept_id ,create_time, update_time
+        from emp
+    </sql>
+
+<select id="getByIf" resultType="com.ttt.pojo.Emp">
+<!-- 使用抽取的sql语句 -->
+        <include refid="commonSelect" />
+        <where>
+            <if test="name != null">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="begin != null and end!=null">
+                and entrydate between #{begin} and #{end} order by update_time desc
+            </if>
+        </where>
+    </select>
+```
+
 
 
 
