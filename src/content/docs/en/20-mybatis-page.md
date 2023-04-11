@@ -3,14 +3,14 @@ title: "myBatis"
 description: "myBatis中的相关知识"
 ---
 
-## 前导
+## 一、前导
     MyBatis是一款优秀的持久层（也是数据层dao）框架，用于简化JDBC的开发
 
     官网：https://mybatis.org/mybatis-3/zh/index.html
 
     与数据库图形化语句相似
 
-## 入门
+## 二、入门
     需求：使用mybatis查询所有用户数据
 
         1、创建springboot工程，配置mybatis（数据库连接信息）
@@ -175,21 +175,21 @@ class MybatisDemoApplicationTests {
 ![image](/img/java/mybatis/01-mybatis入门测试结果.png)
 
 
-## 配置mysql方言
+## 三、配置mysql方言
 
     选中sql语句，右键，选择make 'list()' default ------ 选择第三个-----搜索mysql-----选中它
 
 ![image](/img/java/mybatis/02-配置mysql方言.png)
 
-## 配置数据库的连接
+## 四、配置数据库的连接
 
 ![image](/img/java/mybatis/03-配置数据库.png)
 
-## mybatis和jdbc的区别
+## 五、mybatis和jdbc的区别
 
 ![image](/img/java/mybatis/04-mybatis和jdbc的区别.png)
 
-## 数据库连接池
+## 六、数据库连接池
 在jdbc章节中已经介绍过了
 
     1、概述
@@ -217,7 +217,7 @@ class MybatisDemoApplicationTests {
     3、不想使用默认的，想用durid，可以找到durid的配置，在xml文件中添加配置就可以了
 
 
-## lombok
+## 其、lombok
     是一个实用的java类库，能通过注解的形式自动生成构造器、getter/setter、equals、hashcode、toString等方法，并可以自动化生成日志变量，简化java开发、提高效率
 
 注解|作用
@@ -256,7 +256,7 @@ public class User {
 
 
 
-## 实践--掌握mybatis
+## 八、实践--掌握mybatis
 ### 准备环境
     1、创建数据库
 ```js
@@ -543,7 +543,7 @@ mybatis.configuration.map-underscore-to-camel-case=true
 ![image](/img/java/mybatis/08-spring版本问题.png)
 
 
-## XML映射文件
+## 九、XML映射文件
     规范
 
         XML映射文件的名称与Mapper接口名称不一致，并且将xml映射文件和Mapper接口放置在相同的包下（同包同名）
@@ -603,6 +603,55 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
 
         使用注解还是xml形式，取决于团队，简单的sql使用注解，复杂的建议用xml
 
-## 动态sql
+## 十、动态sql
+### if
+    通过if标签，判断条件是否成立。test属性限定条件，如果条件为true，则拼接sql
+```xml
+    <select id="getByIf" resultType="com.ttt.pojo.Emp">
+        select * from emp where
+        <if test="name != null">
+            name like concat('%',#{name},'%')
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="begin != null and end!=null">
+            and entrydate between #{begin} and #{end} order by update_time desc
+        </if>
+
+    </select>
+```
+    此时测试，但是name为null的时候，后面条件成立会拼接一个and，报语法错误
+
+        通过where标签来替代where
+
+                相当于where的作用
+
+                会自动去除多余的and
+```xml
+<select id="getByIf" resultType="com.ttt.pojo.Emp">
+    select * from emp
+    <where>
+        <if test="name != null">
+            name like concat('%',#{name},'%')
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="begin != null and end!=null">
+            and entrydate between #{begin} and #{end} order by update_time desc
+        </if>
+    </where>
+</select>
+```
+![image](/img/java/mybatis/12-动态sql--where.png)
+
+
+### foreach
+
+
+### sql和include
+
+
 
 
