@@ -366,3 +366,28 @@ spring.datasource.password=xxxxx
 
 ### （五）svn
     1、svn代码管理工具下载地址:
+
+
+## 十、开发流程
+    1、查看页面原型，明确需求
+
+    2、阅读接口文档  （接口文档一般是后端人员编写）
+
+    3、思路分析
+
+    4、接口开发
+
+    5、接口测试
+
+    6、前后端联调
+
+## 十、开发环境准备
+    1、数据库准备:新建数据库，新建部门和员工表
+
+    2、创建springboot工程，引入对应的依赖（web、mybatis、mysql驱动、lombok）
+
+    3、配置applicatin.properties中引入mybatis配置信息
+
+    4、准备对应的实体类pojo
+
+    5、准备对应的Mapper、Service（接口实体类）、Controller基础结构

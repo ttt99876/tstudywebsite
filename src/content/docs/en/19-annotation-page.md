@@ -286,3 +286,8 @@ public List<Emp> getByIf(@Param("name")String name ,@Param("gender")Short gender
 
 List<Emp> empList = empMapper.getByIf("张",(short)1, LocalDate.of(2010, 2, 2), LocalDate.of(2020, 2, 2));
 ```
+
+## @Slf4j
+    lombok下面的注解，用来输出日志信息
+
+    相当于private  static Logger log = LoggerFactory.getLogger(DeptController.class);
