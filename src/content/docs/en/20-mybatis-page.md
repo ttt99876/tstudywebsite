@@ -604,8 +604,10 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
         使用注解还是xml形式，取决于团队，简单的sql使用注解，复杂的建议用xml
 
 ## 十、动态sql
-### if
-    通过if标签，判断条件是否成立。test属性限定条件，如果条件为true，则拼接sql
+### if····where
+ 通过if标签，判断条件是否成立。test属性限定条件，如果条件为true，则拼接sql
+
+    1、if····where
 ```xml
     <select id="getByIf" resultType="com.ttt.pojo.Emp">
         select * from emp where
@@ -621,13 +623,15 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
 
     </select>
 ```
-    此时测试，但是name为null的时候，后面条件成立会拼接一个and，报语法错误
+        此时测试，但是name为null的时候，后面条件成立会拼接一个and，若都不成立，多余where报语法错误
 
-        通过where标签来替代where
+            通过where标签来替代where
 
                 相当于where的作用
 
-                会自动去除多余的and
+                会自动去除多余的and或者or
+
+                若所有条件不成立，则不会生成where
 ```xml
 <select id="getByIf" resultType="com.ttt.pojo.Emp">
     select * from emp
@@ -646,11 +650,56 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生
 ```
 ![image](/img/java/mybatis/12-动态sql--where.png)
 
+    2、if····set
+```xml
+ <update id="update">
+        update emp  set
+            <if test="username!=null">username=#{username},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            <if test="image!=null">image=#{image},</if>
+            <if test="job!=null">job=#{job}</if>
+            <if test="entrydate!=null">entrydate=#{entrydate},</if>
+            <if test="deptId!=null">dept_id=#{deptId},</if>
+            <if test="createTime!=null">create_time=#{createTime},</if>
+            <if test="updateTime!=null">update_time=#{updateTime}</if>
+            where id = #{id}
+    </update>
+```
+
+        此时测试，会出现最后一个条件多余一个逗号，报语法错误
+
+            通过set标签来替代set
+
+                相当于set的作用
+
+                会自动去除多余的逗号
+```xml
+ <update id="update">
+        update emp
+        <set>
+            <if test="username!=null">username=#{username},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="gender!=null">gender=#{gender},</if>
+            <if test="image!=null">image=#{image},</if>
+            <if test="job!=null">job=#{job}</if>
+            <if test="entrydate!=null">entrydate=#{entrydate},</if>
+            <if test="deptId!=null">dept_id=#{deptId},</if>
+            <if test="createTime!=null">create_time=#{createTime},</if>
+            <if test="updateTime!=null">update_time=#{updateTime}</if>
+            where id = #{id}
+        </set>
+    </update>
+```
 
 ### foreach
 
 
+
 ### sql和include
+
 
 
 
