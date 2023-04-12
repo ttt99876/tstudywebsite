@@ -1019,11 +1019,251 @@ void delete(Integer id);
             5、和前端联调
 
 
-    三、
-1、
+    三、新增部门
 
-2、
+       （一）思路
+![image](/img/java/mybatis/17-部门新增流程.png)
 
-3、
+       （二）实现
 
-4、
+            1、在DeptController.java中向DeptService请求，快捷键生成对应的DeptService.java的接口
+```java
+/*
+* 接口文档要求是Post请求方式，参数时json形式的,通过注解@RequestBody
+* */
+@PostMapping("/depts")
+public Result insert(@RequestBody Dept dept){
+    log.info("新增成功");
+    deptService.insert(dept);
+    return Result.success();
+}
+```
+```java
+void insert(Dept dept);
+```
+
+            2、在DeptServiceImpl.java实现类中调用mapper接口查询
+```java
+@Override
+public void insert(Dept dept) {
+    //补全基础属性，如创造时间和更新时间
+    dept.setCreateTime(LocalDate.from(LocalDateTime.now()));
+    dept.setUpdateTime(LocalDate.from(LocalDateTime.now()));
+    deptMapper.insert(dept);
+}
+```
+
+            3、在DeptMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+@Insert("insert into dept(name,create_time,update_time) values(#{name},#{createTime},#{updateTime})")
+void insert(Dept dept);
+```
+            4、postman测试
+![image](/img/java/mybatis/18-部门新增postman测试.png)
+
+            5、和前端联调
+
+    四、修改部门---回显数据
+
+       （一）思路
+
+               参照之前丝路，注意请求方式和响应数据格式
+
+       （二）实现
+
+            1、在DeptController.java中向DeptService请求，快捷键生成对应的DeptService.java的接口
+```java
+// 请求方式是get
+@GetMapping("/{id}")
+public Result getById(@PathVariable Integer id){
+    log.info("ccc"+id);
+    // 用于响应数据的格式
+    Dept dept = deptService.getById(id);
+    return Result.success(dept);
+}
+```
+```java
+Dept getById(Integer id);
+```
+
+            2、在DeptServiceImpl.java实现类中调用mapper接口查询
+```java
+@Override
+public Dept getById(Integer id) {
+    return deptMapper.getById(id);
+}
+```
+
+            3、在DeptMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+@Select("select * from dept where id = #{id}")
+Dept getById(Integer id);
+```
+            4、postman测试
+![image](/img/java/mybatis/20-修改之回显数据.png)
+
+            5、和前端联调
+
+    五、修改部门---修改数据
+
+       （一）思路
+
+               参照之前思路，注意请求方式和响应数据格式
+
+       （二）实现
+
+            1、在DeptController.java中向DeptService请求，快捷键生成对应的DeptService.java的接口
+```java
+// 请求方式是put
+@PutMapping
+public Result update(@RequestBody Dept dept){
+    log.info("修改成功"+dept);
+    deptService.update(dept);
+    return Result.success();
+}
+```
+```java
+void update(Dept dept);
+```
+
+            2、在DeptServiceImpl.java实现类中调用mapper接口查询
+```java
+@Override
+public void update(Dept dept) {
+    //补全基础属性
+    dept.setCreateTime(LocalDate.from(LocalDateTime.now()));
+    dept.setUpdateTime(LocalDate.from(LocalDateTime.now()));
+    deptMapper.update(dept);
+}
+```
+
+            3、在DeptMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+//根据id修改数据
+@Update("update dept set name = #{name},create_time = #{createTime},update_time = #{updateTime} where id =#{id}")
+void update(Dept dept);
+```
+            4、postman测试
+![image](/img/java/mybatis/21-修改之修改数据.png)
+
+            5、和前端联调
+
+### 抽取公共的路径
+    也可以叫提取父路径，通过注解
+
+    在类上，通过@RequestMapping注解来完成
+
+![image](/img/java/mybatis/19-@RequestMapping抽取父路径或公共路径.png)
+
+    注意：一个完整的请求路径，应该是类上@RequestMapping的value属性+方法上的@RequestMapping的value属性
+
+### 员工管理
+    一、分页查询
+
+        sql关键字limit，参数1表示其实索引，第一条数据基于0；参数2表示查询返回记录数
+
+        查询返回记录数   =   每页展示记录数
+
+        起始索引  = （ 页码 - 1 ） * 每页展示记录数
+
+    二、思路
+
+![image](/img/java/mybatis/22-分页查询分析.png)
+
+        根据分页查询的数据limit
+
+        返回的记录数 count
+
+        两条sql语句
+
+        两个类型的数据，需要通过实体类（推荐）来封装
+
+    三、封装一个分页工具
+
+            1、在pojo中创建一个PageBean,里面封装分页的数据列表和总记录数
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PageBean {
+    private Long total;//总记录数
+    private List rows;//数据列表
+}
+```
+
+    四、实现
+
+            1、在EmpController.java中向EmpService请求，快捷键生成对应的EmpService.java的接口
+```java
+@Slf4j
+@RestController
+public class EmpController {
+    @Autowired
+    private EmpService empService;
+    @GetMapping("/emps")
+    public Result page(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer pageSize){
+        log.info("分页"+page,pageSize);
+        PageBean pageBean = empService.page(page,pageSize);
+        return Result.success(pageBean);
+    }
+}
+```
+```java
+public interface EmpService {
+
+    PageBean page(Integer page, Integer pageSize);
+}
+```
+
+            2、在EmpServiceImpl.java实现类中调用mapper接口查询
+```java
+@Service
+public class EmpServiceImpl implements EmpService {
+    @Autowired
+    private EmpMapper empMapper;
+    @Override
+    public PageBean page(Integer page,Integer pageSize) {
+        //1、获取总记录数
+        Long count = empMapper.count();
+
+        //2、获取分页查询结果列表
+        Integer start = (page - 1) * pageSize;
+        List<Emp> empList =  empMapper.page(start,pageSize);
+        //3、封装pageBean对象
+        PageBean pageBean  = new PageBean(count ,empList);
+
+        return pageBean;
+    }
+}
+```
+
+            3、在EmpMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+@Mapper
+public interface EmpMapper {
+    /*
+    * 查询总记录数
+    * */
+    @Select("select count(*) from emp")
+    Long count();
+
+    /**
+     * 分页查询，获取列表数据
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    @Select("select * from emp limit #{start},#{pageSize}")
+    List<Emp> page(@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+}
+```
+            4、postman测试
+
+![image](/img/java/mybatis/23-分页查询测试.png)
+
+            5、和前端联调
+
+
+    四、
+
