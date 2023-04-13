@@ -1232,7 +1232,6 @@ public class EmpServiceImpl implements EmpService {
         List<Emp> empList =  empMapper.page(start,pageSize);
         //3、封装pageBean对象
         PageBean pageBean  = new PageBean(count ,empList);
-
         return pageBean;
     }
 }
@@ -1265,5 +1264,101 @@ public interface EmpMapper {
             5、和前端联调
 
 
-    四、
+
+    四、员工删减
+
+
+
+
+    五、员工新增
+
+### 分页插件
+    为弥补上面分页查询带来的代码繁琐
+
+    1、引入依赖
+```xml
+<!--配置分页插件依赖-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+```
+
+    2、修改sql语句,查询语句不用写LIMIT，分页插件会自动添加，只需要写正常查询就可以。例：select * from 表。即可
+```java
+ @Select("select * from emp")
+ List<Emp> page();
+```
+
+    3、修改实现方法
+```java
+@Service
+public class EmpServiceImpl implements EmpService {
+    @Autowired
+    private EmpMapper empMapper;
+    @Override
+    public PageBean page(Integer page,Integer pageSize) {
+        ////1、获取总记录数
+        //Long count = empMapper.count();
+        //
+        ////2、获取分页查询结果列表
+        //Integer start = (page - 1) * pageSize;
+        //List<Emp> empList =  empMapper.page(start,pageSize);
+        //1、设置分页参数
+        PageHelper.startPage(page,pageSize);
+        //2、执行查询
+        List<Emp> empList = empMapper.page();
+        Page<Emp> p = (Page<Emp>) empList;
+        ////3、封装pageBean对象
+        PageBean pageBean  = new PageBean(p.getTotal() ,p.getResult());
+
+        return pageBean;
+    }
+}
+```
+
+    4、踩坑
+
+            第一处坑
+
+                    报错：引入了分页插件依赖。报错 java.util.ArrayList cannot be cast to com.github.pagehelper.
+
+                    原因：Mybatis已经自己整合到springboot里面去，我们只需要导入相应的starter就好
+
+                    解决：导入Sringboot分页插件依赖
+```xml
+<!--Sringboot分页插件-->
+<dependency>
+    <groupId>com.github.pagehelper</groupId>
+    <artifactId>pagehelper-spring-boot-starter</artifactId>
+    <version>1.2.5</version>
+</dependency>
+```
+
+            第二处坑
+
+                    报错：如下图
+
+![image](/img/java/mybatis/24-分页插件使用的报错.png)
+
+                    原因：SpringBoot2.6 正式发布：循环依赖默认禁止。如上提供解决方案为将spring.main.allow-circular-references 设置为 true，来自动中断循环。
+
+                    解决：
+```java
+// 如果是.properties文件，在文件中添加
+spring.main.allow-circular-references=true
+
+// 如果是.yml文件，则在文件中添加
+spring:
+  main:
+    allow-circular-references:true
+```
+
+
+
+
+
+
+
 

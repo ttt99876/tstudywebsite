@@ -50,6 +50,7 @@ export const SIDEBAR: Sidebar = {
 		],
 		'后端': [
 			{ text: 'java实际开发需要的配置', link: 'en/11-java-configuration-page' },
+			{ text: 'java之properties文件配置', link: 'en/11-java-propertiesFile-page' },
 			{ text: 'java入门（安装和使用）', link: 'en/11-java00-page' },
 			{ text: 'java入门（基本语法）', link: 'en/11-java01-page' },
 			{ text: 'java入门（高级语法）', link: 'en/11-java02-page' },

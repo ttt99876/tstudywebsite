@@ -1,33 +1,30 @@
 ---
-title: "py"
-description: "py中的相关知识"
+title: "java之properties文件配置"
+description: "java之properties文件配置中的相关知识"
 ---
 
-暂时放置
+## 数据库配置
+```xml
 #数据库配置
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql:///tlias
 spring.datasource.username=root
 spring.datasource.password=123456
+```
+## 输出日志的位置
+```xml
 #指定mybatis输出日志的位置，输出控制台
 mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+```
 
+## 驼峰命名自动映射
+```xml
 #开启mybatis的驼峰命名自动映射开关
 mybatis.configuration.map-underscore-to-camel-case=true
+```
 
+## 循环依赖默认禁止
+```xml
 #循环依赖默认禁止。 设置为 true，来自动中断循环。
 spring.main.allow-circular-references=true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
