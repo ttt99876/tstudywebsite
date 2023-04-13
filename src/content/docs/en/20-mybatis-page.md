@@ -1416,6 +1416,49 @@ void delete(List<Integer> list);
 
                   解决：第一种: 将 List 参数封装为 Map 然后再传入,在 XML 配置页面写上相应 key 值.   第二种: 将 collection 的值修改为 list
 
+    六、新增员工
+
+![image](/img/java/mybatis/29-员工-新增思路.png)
+
+            1、在EmpController.java中向EmpService请求（增加条件搜索的条件，名字，性别，开始结束日期），快捷键生成对应的EmpService.java的接口
+```java
+//新增员工
+    @PostMapping("/emps")
+    public Result save(@RequestBody Emp emp){
+        log.info("新增员工");
+        empService.save(emp);
+        return Result.success();
+    }
+```
+```java
+ void save(Emp emp);
+```
+
+            2、在EmpServiceImpl.java实现类中调用mapper接口查询
+```java
+ @Override
+    public void save(Emp emp) {
+    //    补全不新增的内容
+        emp.setCreateTime(LocalDateTime.now());
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.insert(emp);
+    }
+```
+
+            3、在EmpMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+ @Insert("insert into emp(username,name,gender,image,job,entrydate,dept_id,create_time,update_time) values(#{username},#{name},#{gender},#{image},#{job},#{entrydate},#{deptId},#{createTime},#{updateTime})")
+    void insert(Emp emp);
+```
+
+            4、postman测试
+
+![image](/img/java/mybatis/30-员工-新增测试.png)
+
+            5、和前端联调
+
+
+
 
 ### 分页插件
     为弥补上面分页查询带来的代码繁琐
@@ -1497,6 +1540,58 @@ spring:
   main:
     allow-circular-references:true
 ```
+
+### 文件上传
+    文件上传：指将本地图片、视频、音频等文件上传到服务器，供其他用户浏览或下载的过程
+
+    文件上传在项目中应用非常广泛，如发微博、发微信朋友圈
+
+    服务端接受文件--MultipartFile
+```java
+@Slf4j
+@RestController
+public class UploadController {
+    @PostMapping("/upload")
+    public Result upload(String username, Integer age,@RequestParam("image") MultipartFile file){
+        log.info("文件上传成功");
+        return Result.success();
+    }
+}
+```
+
+### 文件存储
+    一、本地存储
+
+        通过getOriginalFilename获取原始文件名，通过transferTo转存到指定位置
+```java
+@Slf4j
+@RestController
+public class UploadController {
+    @PostMapping("/upload")
+    public Result upload(String username, Integer age,@RequestParam("image") MultipartFile image) throws IOException {
+        log.info("文件上传成功");
+        //本地存储
+        //获取原始文件名
+        String originalFilename = image.getOriginalFilename();
+        
+        //将文件存储在服务器的磁盘目录中D:\images(前提是要准备一个images目录)
+        image.transferTo(new File("D:\\images\\"+originalFilename));
+        return Result.success();
+    }
+}
+```
+![image](/img/java/mybatis/31-文件上传测试.png)
+
+        优化：上面案例会出现相同名称存放在同一目录下，会被替换
+
+            使用UUID（通用唯一识别码）来保证图片名称的唯一性
+
+                通用唯一识别码：是一串由32位字符组成的
+
+
+
+
+    二、云存储
 
 
 
