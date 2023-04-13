@@ -1265,12 +1265,157 @@ public interface EmpMapper {
 
 
 
-    四、员工删减
+    四、员工-条件分页查询
+
+![image](/img/java/mybatis/25-员工-条件分页查询.png)
+
+            1、在EmpController.java中向EmpService请求（增加条件搜索的条件，名字，性别，开始结束日期），快捷键生成对应的EmpService.java的接口
+```java
+@Slf4j
+@RestController
+public class EmpController {
+    @Autowired
+    private EmpService empService;
+    @GetMapping("/emps")
+    public Result page(@RequestParam(defaultValue = "1") Integer page,
+                       @RequestParam(defaultValue = "10") Integer pageSize,
+                       String name,
+                       Short gender,
+                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ){
+        //log.info("分页"+page,pageSize,name,gender,begin,end);
+        PageBean pageBean = empService.page(page,pageSize,name,gender,begin,end);
+        return Result.success(pageBean);
+    }
+}
+```
+```java
+public interface EmpService {
+
+    PageBean page(Integer page, Integer pageSize, String name, Short gender, LocalDate begin, LocalDate end);
+}
+```
+
+            2、在EmpServiceImpl.java实现类中调用mapper接口查询
+```java
+@Service
+public class EmpServiceImpl implements EmpService {
+    @Autowired
+    private EmpMapper empMapper;
+    @Override
+    public PageBean page(Integer page, Integer pageSize, String name, Short gender, LocalDate begin, LocalDate end) {
+        ////1、获取总记录数
+        //Long count = empMapper.count();
+        //
+        ////2、获取分页查询结果列表
+        //Integer start = (page - 1) * pageSize;
+        //List<Emp> empList =  empMapper.page(start,pageSize);
+        //1、设置分页参数
+        PageHelper.startPage(page,pageSize);
+        //2、执行查询
+        List<Emp> empList = empMapper.page(  name,  gender, begin, end);
+        Page<Emp> p = (Page<Emp>) empList;
+        ////3、封装pageBean对象
+        PageBean pageBean  = new PageBean(p.getTotal() ,p.getResult());
+
+        return pageBean;
+    }
+}
+```
+
+            3、在EmpMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+List<Emp> page(@Param("name") String name, @Param("gender") Short gender, @Param("begin") LocalDate begin, @Param("end") LocalDate end);
+```
+            4、动态sql配置xml映射文件，注意通报同名等要求
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttt.mapper.EmpMapper">
+
+    <!--resultType:单条记录所封装的类型 （返回的类型）   -->
+    <select id="page" resultType="com.ttt.pojo.Emp">
+        select * from emp
+        <where>
+            <if test="name != null">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="begin != null and end!=null">
+                and entrydate between #{begin} and #{end}
+            </if>
+            order by update_time desc
+        </where>
+    </select>
+</mapper>
+```
+
+            5、postman测试
+
+![image](/img/java/mybatis/26-员工-条件分页查询测试.png)
+
+            6、和前端联调
 
 
 
+    五、批量删除员工
 
-    五、员工新增
+![image](/img/java/mybatis/27-员工-批量删除思路.png)
+
+            1、在EmpController.java中向EmpService请求（增加条件搜索的条件，名字，性别，开始结束日期），快捷键生成对应的EmpService.java的接口
+```java
+ @DeleteMapping("/emps/{ids}")
+    public Result delete(@PathVariable List<Integer> ids){
+        log.info("批量删除成功");
+        empService.delete(ids);
+        return Result.success();
+    }
+```
+```java
+void delete(List<Integer> ids);
+```
+
+            2、在EmpServiceImpl.java实现类中调用mapper接口查询
+```java
+@Override
+    public void delete(List<Integer> ids) {
+        empMapper.delete(ids);
+    }
+```
+
+            3、在EmpMapper.java中向数据库查询数据，最后一步一步的返回
+```java
+void delete(List<Integer> list);
+```
+            4、动态sql配置xml映射文件，注意通报同名等要求
+```xml
+ <delete id="delete">
+        delete from emp where  id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+```
+
+            5、postman测试
+
+![image](/img/java/mybatis/28-员工-批量删除测试.png)
+
+            6、和前端联调
+
+            7、踩坑
+
+                  报错：Parameter 'ids' not found. Available parameters are [arg0, collection, list]
+
+                  原因：原来在mybatis 中，当 Mapper传入的是 List 参数时,会自动将参数封装成 Map 参数,而 map中的 key 会自动用 list , value 就是你传入的 List 参数。
+
+                  解决：第一种: 将 List 参数封装为 Map 然后再传入,在 XML 配置页面写上相应 key 值.   第二种: 将 collection 的值修改为 list
+
 
 ### 分页插件
     为弥补上面分页查询带来的代码繁琐
@@ -1284,7 +1429,6 @@ public interface EmpMapper {
             <version>5.2.0</version>
         </dependency>
 ```
-
     2、修改sql语句,查询语句不用写LIMIT，分页插件会自动添加，只需要写正常查询就可以。例：select * from 表。即可
 ```java
  @Select("select * from emp")
@@ -1312,7 +1456,6 @@ public class EmpServiceImpl implements EmpService {
         Page<Emp> p = (Page<Emp>) empList;
         ////3、封装pageBean对象
         PageBean pageBean  = new PageBean(p.getTotal() ,p.getResult());
-
         return pageBean;
     }
 }
