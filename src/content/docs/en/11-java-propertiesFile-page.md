@@ -28,3 +28,12 @@ mybatis.configuration.map-underscore-to-camel-case=true
 #循环依赖默认禁止。 设置为 true，来自动中断循环。
 spring.main.allow-circular-references=true
 ```
+
+## 设置文件上传的大小
+```xml
+#配置单个文件最大上传大小
+spring.servlet.multipart.max-file-size=10MB
+
+#配置单个请求最大上传大小（一次请求可以上传多个文件）
+spring.servlet.multipart.max-request-size=100MB
+```

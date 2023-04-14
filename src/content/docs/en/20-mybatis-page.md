@@ -1587,11 +1587,51 @@ public class UploadController {
             使用UUID（通用唯一识别码）来保证图片名称的唯一性
 
                 通用唯一识别码：是一串由32位字符组成的
+```java
+@Slf4j
+@RestController
+public class UploadController {
+    @PostMapping("/upload")
+    public Result upload(String username, Integer age,@RequestParam("image") MultipartFile image) throws IOException {
+        log.info("文件上传成功");
+        //本地存储
+        //获取原始文件名
+        String originalFilename = image.getOriginalFilename();
+        //构建新的文件名，避免上传相同文件名
+        String newFileName = UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf("."));
+        //将文件存储在服务器的磁盘目录中D:\images(前提是要准备一个images目录)
+        image.transferTo(new File("D:\\images\\"+newFileName));
+        return Result.success();
+    }
+}
+```
+            以上代码允许单个文件最大为1M,上传更大的文件需要进行一下配置
+```xml
+#配置单个文件最大上传大小
+spring.servlet.multipart.max-file-size=10MB
 
+#配置单个请求最大上传大小（一次请求可以上传多个文件）
+spring.servlet.multipart.max-request-size=100MB
+```
 
+            补充
+```java
+String getOriginalFilename();//获取原始文件名
+void transferTo(File dest);//将接受的文件转存到磁盘文件中
+long getSize();//获取文件的大小，单位：字节
+byte[] getBytes();//获取文件内容的字节数组
+InputStream getInputStream();//获取接受到的文件内容的输入流
+```
 
 
     二、云存储
+
+        购买服务，自己创建
+
+        第三方，如阿里云，百度云等
+
+
+
 
 
 
